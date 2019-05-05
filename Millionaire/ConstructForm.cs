@@ -61,15 +61,14 @@ namespace Millionaire
             wrongAnswerBox3.Text = null;
         }
 
-        private void UpdateCounter()
+        private void UpdateCounter(int currentQuestion)
         {
             counterLabel.Text = $"{currentQuestion}/{QuestionPack.questionNumber}";
-            currentQuestion++;
         }
 
-        private void UpdateCounter(bool enabled)
+        private void CounterVisibility(bool isVisible)
         {
-            counterLabel.Visible = enabled;
+            counterLabel.Visible = isVisible;
         }
 
         private void nextButton_Click1(object sender, EventArgs e)
@@ -81,8 +80,7 @@ namespace Millionaire
                 questionPack = new QuestionPack();
                 questionPack.packName = TopTextBox.Text;
                 EnableBoxes(true);
-                currentQuestion++;
-                UpdateCounter();
+                UpdateCounter(++currentQuestion);
                 ClearTextBoxes();
                 ChangeTopLabelText("Введите вопрос");
                 nextButton.Click -= nextButton_Click1;
@@ -92,7 +90,7 @@ namespace Millionaire
 
         private void nextButton_Click2(object sender, EventArgs e)
         {
-            if (currentQuestion <= QuestionPack.questionNumber)
+            if (currentQuestion < QuestionPack.questionNumber)
             {
                 if (IsBoxesEmpty())
                 {
@@ -101,12 +99,15 @@ namespace Millionaire
                 }
                 SaveTextBoxes();
                 ClearTextBoxes();
-                UpdateCounter();
+                UpdateCounter(++currentQuestion);
                 return;
             }
+            SaveTextBoxes();
+            UpdateCounter(++currentQuestion);
             ChangeTopLabelText("Введите дополнительный простой вопрос");
             ClearTextBoxes();
-            UpdateCounter(false);
+            CounterVisibility(false);
+            prevButton.Enabled = false;
             nextButton.Click -= nextButton_Click2;
             nextButton.Click += nextButton_Click3;
         }
@@ -114,7 +115,7 @@ namespace Millionaire
         private void nextButton_Click3(object sender, EventArgs e)
         {
             var strings = new string[] { "", "Введите дополнительный сложный вопрос", "Введите дополнительный вопрос средней сложности" };
-            if (currentQuestion <= (QuestionPack.replacersNumber + QuestionPack.questionNumber))
+            if (currentQuestion < (QuestionPack.replacersNumber + QuestionPack.questionNumber))
             {
                 if (IsBoxesEmpty())
                 {
@@ -130,20 +131,18 @@ namespace Millionaire
             DataProvider.SaveQuestionPackList(questionPack.packName);
             DataProvider.SaveQuestionPack(questionPack);
             MessageBox.Show("Сохранено!");
+            this.Close();
         }
         private void prevButton_Click(object sender, EventArgs e)
         {
             if (currentQuestion > 1)
             {
+                UpdateCounter(--currentQuestion);
                 TopTextBox.Text = questionPack.questions[currentQuestion - 1].questionText;
                 rightAnswerBox.Text = questionPack.questions[currentQuestion - 1].rightAnswer;
                 wrongAnswerBox1.Text = questionPack.questions[currentQuestion - 1].WrongAnswers[0];
                 wrongAnswerBox2.Text = questionPack.questions[currentQuestion - 1].WrongAnswers[1];
                 wrongAnswerBox3.Text = questionPack.questions[currentQuestion - 1].WrongAnswers[2];
-            }
-            else if (currentQuestion == 1)
-            {
-                EnableBoxes(false);
             }
         }
     }
