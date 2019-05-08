@@ -9,12 +9,8 @@ namespace Millionaire
     [Serializable]
     public class QuestionPack
     {
-        [NonSerialized]
-        public static int questionNumber = 15;//To GameRules
-        [NonSerialized]
-        public static int replacersNumber = 3;//To GameRules
 
         public string packName;
-        public Question[] questions = new Question[questionNumber + replacersNumber];
+        public Question[] questions = new Question[GameRules.questionNumber + GameRules.replacerNumber];
     }
 }

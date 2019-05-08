@@ -59,6 +59,7 @@
       <DependentUpon>GameForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataService\IDataProvider.cs" />
+    <Compile Include="GameRules.cs" />
     <Compile Include="MenuForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -63,7 +63,7 @@ namespace Millionaire
 
         private void UpdateCounter(int currentQuestion)
         {
-            counterLabel.Text = $"{currentQuestion}/{QuestionPack.questionNumber}";
+            counterLabel.Text = $"{currentQuestion}/{GameRules.questionNumber}";
         }
 
         private void CounterVisibility(bool isVisible)
@@ -90,7 +90,7 @@ namespace Millionaire
 
         private void nextButton_Click2(object sender, EventArgs e)
         {
-            if (currentQuestion < QuestionPack.questionNumber)
+            if (currentQuestion < GameRules.questionNumber)
             {
                 if (IsBoxesEmpty())
                 {
@@ -107,7 +107,7 @@ namespace Millionaire
             ChangeTopLabelText("Введите дополнительный простой вопрос");
             ClearTextBoxes();
             CounterVisibility(false);
-            prevButton.Enabled = false;
+            prevButton.Visible = false;
             nextButton.Click -= nextButton_Click2;
             nextButton.Click += nextButton_Click3;
         }
@@ -115,7 +115,7 @@ namespace Millionaire
         private void nextButton_Click3(object sender, EventArgs e)
         {
             var strings = new string[] { "", "Введите дополнительный сложный вопрос", "Введите дополнительный вопрос средней сложности" };
-            if (currentQuestion < (QuestionPack.replacersNumber + QuestionPack.questionNumber))
+            if (currentQuestion < (GameRules.replacerNumber + GameRules.questionNumber))
             {
                 if (IsBoxesEmpty())
                 {
@@ -124,7 +124,7 @@ namespace Millionaire
                 }
                 SaveTextBoxes();
                 ClearTextBoxes();
-                ChangeTopLabelText(strings[QuestionPack.replacersNumber + QuestionPack.questionNumber - currentQuestion]);
+                ChangeTopLabelText(strings[GameRules.replacerNumber + GameRules.questionNumber - currentQuestion]);
                 currentQuestion++;
                 return;
             }
