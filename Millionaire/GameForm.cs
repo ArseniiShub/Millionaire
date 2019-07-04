@@ -19,29 +19,29 @@ namespace Millionaire
         {
             InitializeComponent();
             DataProvider = dataProvider;
-            CreateRadio();
+            //CreateRadio();
         }
         public IDataProvider DataProvider { get; set; }
 
         int currentQuestion = -1;
         QuestionPack questionPack;
 
-        private void CreateRadio()
-        {
-            if (DataProvider.TryGetQuestionPackList(out Dictionary<int, string> quizList))
-            {
-                int YPosition = 1;
-                foreach (var quizInfo in quizList)
-                {
-                    RadioButton radioButton = new RadioButton { Text = $"{quizInfo.Value}", Location = new Point(10, YPosition++ * 20), Tag = quizInfo.Key };
-                    choosePackGroupBox.Controls.Add(radioButton);
-                }
-            }
-            else
-            {
-                MessageBox.Show("ErrorCreatingRadio");//Выход?
-            }
-        }
+        //private void CreateRadio()
+        //{
+        //    if (DataProvider.TryGetQuestionPackList(out Dictionary<int, string> quizList))
+        //    {
+        //        int YPosition = 1;
+        //        foreach (var quizInfo in quizList)
+        //        {
+        //            RadioButton radioButton = new RadioButton { Text = $"{quizInfo.Value}", Location = new Point(10, YPosition++ * 20), Tag = quizInfo.Key };
+        //            choosePackGroupBox.Controls.Add(radioButton);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("ErrorCreatingRadio");//Выход?
+        //    }
+        //}
 
         private void startGameButton_Click(object sender, EventArgs e)
         {
@@ -68,9 +68,9 @@ namespace Millionaire
             questionNumLabel.Text = $"{currentQuestion + 1} / {questionPack.questions.Length}"; 
             questionLabel.Text = questionPack.questions[currentQuestion].questionText;
             answersPanel.Controls[0].Text = questionPack.questions[currentQuestion].rightAnswer;
-            answersPanel.Controls[1].Text = questionPack.questions[currentQuestion].WrongAnswers[0];
-            answersPanel.Controls[2].Text = questionPack.questions[currentQuestion].WrongAnswers[1];
-            answersPanel.Controls[3].Text = questionPack.questions[currentQuestion].WrongAnswers[2];
+            answersPanel.Controls[1].Text = questionPack.questions[currentQuestion].wrongAnswers[0];
+            answersPanel.Controls[2].Text = questionPack.questions[currentQuestion].wrongAnswers[1];
+            answersPanel.Controls[3].Text = questionPack.questions[currentQuestion].wrongAnswers[2];
             Shuffle();
             timerLabel.Text = "60";
             prizeLabel.Text = $"Текущий выигрыш: {Prize.GetCurrentPrize(currentQuestion)} рублей";

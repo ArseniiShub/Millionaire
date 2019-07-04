@@ -76,6 +76,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Question.cs" />
+    <Compile Include="QuestionController.cs" />
     <Compile Include="QuestionPack.cs" />
     <Compile Include="DataService\XmlDataProvider.cs" />
     <EmbeddedResource Include="ConstructForm.resx">
@@ -139,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Game.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Hint\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

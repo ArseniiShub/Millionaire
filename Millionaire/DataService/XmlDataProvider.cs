@@ -15,37 +15,6 @@ namespace Millionaire
         {
             this.packListFilePath = packListFilePath;
         }
-        public Dictionary<int, string> GetQuestionPackList()
-        {
-            var quizList = new Dictionary<int, string>();
-            var xmlDoc = new XmlDocument();
-            xmlDoc.Load(packListFilePath);
-
-            foreach (XmlNode node in xmlDoc.DocumentElement)
-            {
-                var id = Int32.Parse(node.ChildNodes[0].InnerText);
-                var name = node.ChildNodes[1].InnerText;
-                quizList.Add(id, name);
-            }
-
-            return quizList;
-        }
-
-        public bool TryGetQuestionPackList(out Dictionary<int,string> quizList)
-        {
-            bool isFine;
-            try
-            {
-                quizList = GetQuestionPackList();
-                isFine = true;
-            }
-            catch
-            {
-                quizList = null;
-                isFine = false;
-            }
-            return isFine;
-        }
 
         public QuestionPack GetQuestionPack(int id)
         {
@@ -75,42 +44,10 @@ namespace Millionaire
         public void SaveQuestionPack(QuestionPack questionPack)
         {
             XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
-            using (FileStream fs = new FileStream($"QuestionPacks\\{questionPack.packName}.xml", FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream($"QuestionPacks\\{questionPack.id}.xml", FileMode.OpenOrCreate))
             {
                 formatter.Serialize(fs, questionPack);
             }
         }
-
-        public void SaveQuestionPackList(string packName)
-        {
-
-            XElement questionPackDocument;
-            
-            if (TryGetQuestionPackList(out Dictionary<int, string> questionPackList))
-            {
-                questionPackDocument = XElement.Load(packListFilePath);
-
-                var newElement = new XElement
-                    (
-                        "QuestionPackInfo",
-                        new XElement("Id", questionPackList.Last().Key + 1),
-                        new XElement("Name", packName)
-                    );
-
-                questionPackDocument.Add(newElement);
-            }
-            else
-            {
-                var newElement = new XElement
-                    (
-                        "QuestionPackInfo",
-                        new XElement("Id", 1),
-                        new XElement("Name", packName)
-                    );
-                questionPackDocument = new XElement("QuestionPackList", newElement);
-            }
-
-            questionPackDocument.Save(packListFilePath);
-        }   
     }
 }

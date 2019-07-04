@@ -9,8 +9,11 @@ namespace Millionaire
     [Serializable]
     public class QuestionPack
     {
-
+        public int id;
         public string packName;
-        public Question[] questions = new Question[GameRules.questionNumber + GameRules.replacerNumber];
+        public bool isCompleted = false;
+        public int timesPlayed;
+        public Question[] questions = new Question[GameRules.questionNumber];
+        public Question[] replacerQuestions = new Question[GameRules.replacerNumber];
     }
 }
