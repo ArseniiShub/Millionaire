@@ -79,6 +79,7 @@
     <Compile Include="QuestionController.cs" />
     <Compile Include="QuestionPack.cs" />
     <Compile Include="DataService\XmlDataProvider.cs" />
+    <Compile Include="QuestionType.cs" />
     <EmbeddedResource Include="ConstructForm.resx">
       <DependentUpon>ConstructForm.cs</DependentUpon>
     </EmbeddedResource>

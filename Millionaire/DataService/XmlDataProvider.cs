@@ -10,44 +10,87 @@ namespace Millionaire
 {
     class XmlDataProvider : IDataProvider
     {
-        private readonly string packListFilePath;
-        public XmlDataProvider(string packListFilePath = "PackNames.xml")
+        public readonly string questionsPath;
+        public XmlDataProvider(string questionsPath = "QuestionPacks")
         {
-            this.packListFilePath = packListFilePath;
+            this.questionsPath = questionsPath;
         }
 
-        public QuestionPack GetQuestionPack(int id)
+        public QuestionPack GetQuestionPack(int packName)
         {
             XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
-            using (FileStream fs = new FileStream($"QuestionPacks\\{id}.xml", FileMode.Open))
+            using (FileStream fs = new FileStream($"QuestionPacks\\{packName}.xml", FileMode.Open))
             {
                 return (QuestionPack)formatter.Deserialize(fs);
             }
         }
 
-        public bool TryGetQuestionPack(out QuestionPack questionPack, int id)
+        public List<QuestionPack> GetQuestionPacksList()
         {
-            bool isFine;
-            try
+            List<QuestionPack> packList = new List<QuestionPack>();
+            QuestionPack _questionPack;
+            XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
+            DirectoryInfo dir = new DirectoryInfo(questionsPath);
+            
+            foreach (var item in dir.GetFiles())
             {
-                questionPack = GetQuestionPack(id);
-                isFine = true;
+                using (FileStream fs = new FileStream(item.FullName, FileMode.Open))
+                {
+                    _questionPack = (QuestionPack)formatter.Deserialize(fs);
+                    packList.Add(_questionPack);
+                }
             }
-            catch
-            {
-                questionPack = null;
-                isFine = false;
-            }
-            return isFine;
+            return packList;
         }
 
         public void SaveQuestionPack(QuestionPack questionPack)
         {
+            DirectoryInfo dir = new DirectoryInfo(questionsPath);
+            string fileName;
+            if (CheckIfNameAvaliable(questionPack.packName))
+                fileName = $"{questionPack.packName}";
+            else
+                fileName = questionPack.packName + " (1)";
+            if (!CheckIfNameAvaliable(fileName))
+            {
+                int conflictAddition = Convert.ToInt32(String.Concat(fileName.SkipWhile(x => x != '(').Skip(1).TakeWhile(y => y != ')')));
+                while (!CheckIfNameAvaliable($"{questionPack.packName} ({conflictAddition})"))
+                {
+                    conflictAddition++;
+                }
+                fileName = $"{questionPack.packName} ({conflictAddition})";
+            }
+            questionPack.packName = fileName;
+            try
+            {
+                questionPack.id = QuestionController.idNameDict.Keys.Max() + 1;
+            }
+            catch
+            {
+                questionPack.id = 0;
+            }
+            
             XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
-            using (FileStream fs = new FileStream($"QuestionPacks\\{questionPack.id}.xml", FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream($"{questionsPath}\\{fileName}.xml", FileMode.OpenOrCreate))
             {
                 formatter.Serialize(fs, questionPack);
             }
+        }
+
+        public void DeleteQuestionPack(string fileName)
+        {
+            File.Delete($"{questionsPath}\\{fileName}.xml");
+        }
+
+        private bool CheckIfNameAvaliable(string name)
+        {
+            bool IsAvaliable = true;
+            foreach (var item in QuestionController.idNameDict.Values)
+            {
+                if (item == name)
+                    IsAvaliable = false;
+            }
+            return IsAvaliable;
         }
     }
 }

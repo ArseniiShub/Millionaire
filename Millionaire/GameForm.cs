@@ -47,9 +47,7 @@ namespace Millionaire
         {
             var selectedButton = choosePackGroupBox.Controls.OfType<RadioButton>().Where(x => x.Checked).FirstOrDefault();
             int id = Convert.ToInt32(selectedButton.Tag);
-            if (DataProvider.TryGetQuestionPack(out QuestionPack questionPack, id))
-                this.questionPack = questionPack;
-
+            questionPack = DataProvider.GetQuestionPack(id);
             if (string.IsNullOrWhiteSpace(playerNameBox.Text))
                 return;
             initialPanel.Visible = false;

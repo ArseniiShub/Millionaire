@@ -1,30 +1,22 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Xml.Serialization;
+using System.Linq;
 
 namespace Millionaire
 {
-    public partial class ConstructForm : Form
+    public partial class ConstructForm : Form //Visual
     {
-        string questionsPath = "QuestionPacks";
-        IDataProvider DataProvider;
-        QuestionPack questionPack = new QuestionPack();
-
-        public ConstructForm(IDataProvider dataProvider)
+        public ConstructForm()
         {
-            DataProvider = dataProvider;
             InitializeComponent();
         }
 
-        private void ConstructForm_Load(object sender, EventArgs e) //Load pack names
+        private void ConstructForm_Load(object sender, EventArgs e)
         {
-            DirectoryInfo dir = new DirectoryInfo(questionsPath);
-            XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
-            foreach (var item in dir.GetFiles())
+            foreach (var item in QuestionController.idNameDict)
             {
-                using (FileStream fs = new FileStream(item.FullName, FileMode.Open))
-                    PackList.Items.Add(((QuestionPack)formatter.Deserialize(fs)).packName);
+                PackList.Items.Add(item.Value);
             }
         }
 
@@ -41,15 +33,11 @@ namespace Millionaire
                 MessageBox.Show("Введите название набора!");
                 return;
             }
-            foreach (var item in PackList.Items)
-                if (item.ToString() == InputPackNameTextBox.Text)
-                {
-                    MessageBox.Show("Такое имя уже занято!");
-                    return;
-                }
-            questionPack.packName = InputPackNameTextBox.Text;
+
+            QuestionController.SavePackName(InputPackNameTextBox.Text);
             PackNameGroupBox.Visible = false;
             QuestionsGroupBox.Visible = true;
+            QuestionController.SetCounter(1, GameRules.questionNumber);
             UpdateCounter(CounterLabel1, 0);
         }
 
@@ -57,23 +45,23 @@ namespace Millionaire
         {
             if(QuestionController.CurrentQuestion.IsLast())
             {
-                SaveTextBoxes1();
+                QuestionController.SaveCurrentQuestion(QuestionType.Default, QuestionsGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray());
                 ClearTextBoxes(QuestionsGroupBox);
                 QuestionsGroupBox.Visible = false;
                 ReplacerQuestionGroupBox.Visible = true;
-                QuestionController.Set(1, GameRules.replacerNumber);
+                QuestionController.SetCounter(1, GameRules.replacerNumber);
                 UpdateCounter(CounterLabel2, 0);
                 return;
             }
 
-            if (IsBoxesEmpty(QuestionsGroupBox))
-                MessageBox.Show("Заполните все поля!");
+            //if (IsBoxesEmpty(QuestionsGroupBox))
+            //    MessageBox.Show("Заполните все поля!");
             else
             {
-                SaveTextBoxes1();
+                QuestionController.SaveCurrentQuestion(QuestionType.Default, QuestionsGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray());
                 ClearTextBoxes(QuestionsGroupBox);
                 UpdateCounter(CounterLabel1, 1);
-                FillTextBoxes1();
+                FillTextBoxes(QuestionsGroupBox, QuestionType.Default);
             }
         }
 
@@ -88,7 +76,7 @@ namespace Millionaire
             {
                 ClearTextBoxes(QuestionsGroupBox);
                 UpdateCounter(CounterLabel1, -1);
-                FillTextBoxes1();
+                FillTextBoxes(QuestionsGroupBox, QuestionType.Default);
             }
         }
 
@@ -104,30 +92,13 @@ namespace Millionaire
             }
         }
 
-        private void FillTextBoxes1()
+        private void FillTextBoxes(GroupBox groupBox, QuestionType questionType)
         {
-            try
+            var temp = QuestionController.GetCurrentQuestion(questionType);
+            for (int i = 0; i < groupBox.Controls.OfType<TextBox>().ToArray().Length; i++)
             {
-                InputQuestionBox.Text = questionPack.questions[QuestionController.CurrentQuestion.index].questionText;
-                InputRightAnswerBox.Text = questionPack.questions[QuestionController.CurrentQuestion.index].rightAnswer;
-                InputWrongAnswerBox1.Text = questionPack.questions[QuestionController.CurrentQuestion.index].wrongAnswers[0];
-                InputWrongAnswerBox2.Text = questionPack.questions[QuestionController.CurrentQuestion.index].wrongAnswers[1];
-                InputWrongAnswerBox3.Text = questionPack.questions[QuestionController.CurrentQuestion.index].wrongAnswers[2];
+                groupBox.Controls.OfType<TextBox>().ToArray()[i].Text = temp[i];
             }
-            catch { }
-        }
-
-        private void FillTextBoxes2()
-        {
-            try
-            {
-                InputRepQuestionBox.Text = questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].questionText;
-                InputRepRightAnswerBox.Text = questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].rightAnswer;
-                InputRepWrongAnswerBox1.Text = questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].wrongAnswers[0];
-                InputRepWrongAnswerBox2.Text = questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].wrongAnswers[1];
-                InputRepWrongAnswerBox3.Text = questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].wrongAnswers[2];
-            }
-            catch { }
         }
 
         private bool IsBoxesEmpty(GroupBox groupBox)
@@ -144,26 +115,6 @@ namespace Millionaire
             return false;
         }
 
-        private void SaveTextBoxes1()
-        {
-            questionPack.questions[QuestionController.CurrentQuestion.index] = new Question();
-            questionPack.questions[QuestionController.CurrentQuestion.index].questionText = InputQuestionBox.Text;
-            questionPack.questions[QuestionController.CurrentQuestion.index].rightAnswer = InputRightAnswerBox.Text;
-            questionPack.questions[QuestionController.CurrentQuestion.index].wrongAnswers[0] = InputWrongAnswerBox1.Text;
-            questionPack.questions[QuestionController.CurrentQuestion.index].wrongAnswers[1] = InputWrongAnswerBox2.Text;
-            questionPack.questions[QuestionController.CurrentQuestion.index].wrongAnswers[2] = InputWrongAnswerBox3.Text;
-        }
-
-        private void SaveTextBoxes2()
-        {
-            questionPack.replacerQuestions[QuestionController.CurrentQuestion.index] = new Question();
-            questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].questionText = InputRepQuestionBox.Text;
-            questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].rightAnswer = InputRepRightAnswerBox.Text;
-            questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].wrongAnswers[0] = InputRepWrongAnswerBox1.Text;
-            questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].wrongAnswers[1] = InputRepWrongAnswerBox2.Text;
-            questionPack.replacerQuestions[QuestionController.CurrentQuestion.index].wrongAnswers[2] = InputRepWrongAnswerBox3.Text;
-        }
-
         private void UpdateCounter(Label counter, int currentQuestionNumberChanged)
         {
             QuestionController.CurrentQuestion.index += currentQuestionNumberChanged;
@@ -174,19 +125,19 @@ namespace Millionaire
         {
             if (QuestionController.CurrentQuestion.IsLast())
             {
-                questionPack.isCompleted = true;
-                DataProvider.SaveQuestionPack(questionPack);
                 MessageBox.Show("Сохранено!");
+                QuestionController.SaveFile();
+                PackList.Items.Add(QuestionController.GetPackName());
                 Close();
             }
-            if (IsBoxesEmpty(ReplacerQuestionGroupBox))
-                MessageBox.Show("Заполните все поля!");
+            //if (IsBoxesEmpty(ReplacerQuestionGroupBox))
+            //    MessageBox.Show("Заполните все поля!");
             else
             {
-                SaveTextBoxes2();
+                QuestionController.SaveCurrentQuestion(QuestionType.ReplacerQuestion, ReplacerQuestionGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray());
                 ClearTextBoxes(ReplacerQuestionGroupBox);
                 UpdateCounter(CounterLabel2, 1);
-                FillTextBoxes2();
+                FillTextBoxes(ReplacerQuestionGroupBox, QuestionType.ReplacerQuestion);
             }
         }
 
@@ -196,15 +147,15 @@ namespace Millionaire
             {
                 PackNameGroupBox.Visible = false;
                 QuestionsGroupBox.Visible = true;
-                QuestionController.Set(15, 15);
-                FillTextBoxes1();
+                QuestionController.SetCounter(15, 15);
+                FillTextBoxes(QuestionsGroupBox, QuestionType.Default);
             }
             else
             {
-                SaveTextBoxes2();
+                QuestionController.SaveCurrentQuestion(QuestionType.ReplacerQuestion, ReplacerQuestionGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray());
                 ClearTextBoxes(ReplacerQuestionGroupBox);
                 UpdateCounter(CounterLabel2, - 1);
-                FillTextBoxes2();
+                FillTextBoxes(ReplacerQuestionGroupBox, QuestionType.ReplacerQuestion);
             }
         }
 
@@ -212,26 +163,30 @@ namespace Millionaire
         {
             if (PackList.SelectedItem != null)
             {
-                DirectoryInfo dir = new DirectoryInfo(questionsPath);
-                XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
-                string fileToRemove = "";
-                foreach (var item in dir.GetFiles())
-                {
-                    using (FileStream fs = new FileStream(item.FullName, FileMode.Open))
-                    {
-                        string _packName = ((QuestionPack)formatter.Deserialize(fs)).packName;
-                        if (_packName == PackList.SelectedItem.ToString())
-                            fileToRemove = item.Name;
-                    }
-                }
-                File.Delete($"{questionsPath}\\{fileToRemove}");
-                PackList.Items.RemoveAt(PackList.SelectedIndex);
+                QuestionController.DeleteFile(PackList.SelectedItem.ToString(), PackList.SelectedIndex);
+                PackList.Items.RemoveAt(PackList.SelectedIndex); 
             }
+            else
+                MessageBox.Show("Выберите набор для удаления");
         }
 
-        private void EditButton_Click(object sender, EventArgs e)
+        private void EditButton_Click(object sender, EventArgs e) //TODO: Move logic
         {
-            throw new NotImplementedException(); //TODO
+            if (PackList.SelectedItem != null)
+            {
+                foreach (var item in QuestionController.idNameDict)
+                { 
+                    if (item.Value == PackList.SelectedItem.ToString())
+                    {
+                        InputPackNameTextBox.Text = QuestionController.GetPackName();
+                        InitialGroupBox.Visible = false;
+                        PackNameGroupBox.Visible = true;
+                        DeleteButton_Click(sender, e);
+                    }
+                }
+            }
+            else
+                MessageBox.Show("Выберите набор для редактирования");
         }
     }
 }

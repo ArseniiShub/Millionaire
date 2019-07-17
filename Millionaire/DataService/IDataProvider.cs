@@ -9,8 +9,10 @@ namespace Millionaire
     public interface IDataProvider
     {
         QuestionPack GetQuestionPack(int id);
-        bool TryGetQuestionPack(out QuestionPack questionPack, int id);
+        //bool TryGetQuestionPack(out QuestionPack questionPack, int id);
+        List<QuestionPack> GetQuestionPacksList();
 
+        void DeleteQuestionPack(string fileName);
         void SaveQuestionPack(QuestionPack questionPack);
     }
 }
