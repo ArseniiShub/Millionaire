@@ -16,7 +16,7 @@ namespace Millionaire
             this.questionsPath = questionsPath;
         }
 
-        public QuestionPack GetQuestionPack(int packName)
+        public QuestionPack GetQuestionPack(string packName)
         {
             XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
             using (FileStream fs = new FileStream($"QuestionPacks\\{packName}.xml", FileMode.Open))

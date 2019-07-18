@@ -8,7 +8,7 @@ namespace Millionaire
 {
     public interface IDataProvider
     {
-        QuestionPack GetQuestionPack(int id);
+        QuestionPack GetQuestionPack(string packName);
         //bool TryGetQuestionPack(out QuestionPack questionPack, int id);
         List<QuestionPack> GetQuestionPacksList();
 
