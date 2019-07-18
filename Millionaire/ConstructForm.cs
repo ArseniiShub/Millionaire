@@ -39,6 +39,7 @@ namespace Millionaire
             QuestionsGroupBox.Visible = true;
             QuestionController.SetCounter(1, GameRules.questionNumber);
             UpdateCounter(CounterLabel1, 0);
+            FillTextBoxes(QuestionsGroupBox, QuestionType.Default);
         }
 
         private void NextQuestionButton1_Click(object sender, EventArgs e)
@@ -51,6 +52,7 @@ namespace Millionaire
                 ReplacerQuestionGroupBox.Visible = true;
                 QuestionController.SetCounter(1, GameRules.replacerNumber);
                 UpdateCounter(CounterLabel2, 0);
+                FillTextBoxes(ReplacerQuestionGroupBox, QuestionType.ReplacerQuestion);
                 return;
             }
 
@@ -174,16 +176,11 @@ namespace Millionaire
         {
             if (PackList.SelectedItem != null)
             {
-                foreach (var item in QuestionController.idNameDict)
-                { 
-                    if (item.Value == PackList.SelectedItem.ToString())
-                    {
-                        InputPackNameTextBox.Text = QuestionController.GetPackName();
-                        InitialGroupBox.Visible = false;
-                        PackNameGroupBox.Visible = true;
-                        DeleteButton_Click(sender, e);
-                    }
-                }
+                QuestionController.LoadQuestionPack(PackList.SelectedItem.ToString());
+                InputPackNameTextBox.Text = QuestionController.GetPackName();
+                InitialGroupBox.Visible = false;
+                PackNameGroupBox.Visible = true;
+                DeleteButton_Click(sender, e);
             }
             else
                 MessageBox.Show("Выберите набор для редактирования");
