@@ -43,7 +43,7 @@
             this.startButton.TabIndex = 0;
             this.startButton.Text = "Начать";
             this.startButton.UseVisualStyleBackColor = true;
-            this.startButton.Click += new System.EventHandler(this.startButton_Click);
+            this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // constructButton
             // 
@@ -53,7 +53,7 @@
             this.constructButton.TabIndex = 1;
             this.constructButton.Text = "Конструктор";
             this.constructButton.UseVisualStyleBackColor = true;
-            this.constructButton.Click += new System.EventHandler(this.constructButton_Click);
+            this.constructButton.Click += new System.EventHandler(this.ConstructButton_Click);
             // 
             // recordsButton
             // 
@@ -63,7 +63,7 @@
             this.recordsButton.TabIndex = 2;
             this.recordsButton.Text = "Рекорды";
             this.recordsButton.UseVisualStyleBackColor = true;
-            this.recordsButton.Click += new System.EventHandler(this.recordsButton_Click);
+            this.recordsButton.Click += new System.EventHandler(this.RecordsButton_Click);
             // 
             // helpButton
             // 
@@ -73,7 +73,7 @@
             this.helpButton.TabIndex = 3;
             this.helpButton.Text = "Правила";
             this.helpButton.UseVisualStyleBackColor = true;
-            this.helpButton.Click += new System.EventHandler(this.helpButton_Click);
+            this.helpButton.Click += new System.EventHandler(this.HelpButton_Click);
             // 
             // exitButton
             // 
@@ -83,7 +83,7 @@
             this.exitButton.TabIndex = 4;
             this.exitButton.Text = "Выйти";
             this.exitButton.UseVisualStyleBackColor = true;
-            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
+            this.exitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
             // MenuForm
             // 
