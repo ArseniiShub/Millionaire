@@ -43,18 +43,18 @@ namespace Millionaire
             return packList;
         }
 
-        public void SaveQuestionPack(QuestionPack questionPack)
+        public void SaveQuestionPack(QuestionPack questionPack, IList<string> namelist) //Change name:ist name
         {
             DirectoryInfo dir = new DirectoryInfo(questionsPath);
             string fileName;
-            if (CheckIfNameAvaliable(questionPack.packName))
+            if (CheckIfNameAvaliable(questionPack.packName, namelist))
                 fileName = $"{questionPack.packName}";
             else
                 fileName = questionPack.packName + " (1)";
-            if (!CheckIfNameAvaliable(fileName))
+            if (!CheckIfNameAvaliable(fileName, namelist))
             {
                 int conflictAddition = Convert.ToInt32(String.Concat(fileName.SkipWhile(x => x != '(').Skip(1).TakeWhile(y => y != ')')));
-                while (!CheckIfNameAvaliable($"{questionPack.packName} ({conflictAddition})"))
+                while (!CheckIfNameAvaliable($"{questionPack.packName} ({conflictAddition})", namelist))
                 {
                     conflictAddition++;
                 }
@@ -82,15 +82,9 @@ namespace Millionaire
             File.Delete($"{questionsPath}\\{fileName}.xml");
         }
 
-        private bool CheckIfNameAvaliable(string name)
+        private bool CheckIfNameAvaliable(string name, IList<string> nameList)
         {
-            bool IsAvaliable = true;
-            foreach (var item in QuestionController.idNameDict.Values)
-            {
-                if (item == name)
-                    IsAvaliable = false;
-            }
-            return IsAvaliable;
+            return !nameList.Contains(name);
         }
     }
 }
