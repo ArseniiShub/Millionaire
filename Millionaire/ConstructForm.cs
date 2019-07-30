@@ -14,10 +14,7 @@ namespace Millionaire
 
         private void ConstructForm_Load(object sender, EventArgs e)
         {
-            foreach (var item in QuestionController.idNameDict)
-            {
-                PackList.Items.Add(item.Value);
-            }
+            PackList.Items.AddRange(QuestionController.packNameList.ToArray());
         }
 
         private void AddButton_Click(object sender, EventArgs e)
@@ -39,31 +36,31 @@ namespace Millionaire
             QuestionsGroupBox.Visible = true;
             QuestionController.SetCounter(1, GameRules.questionNumber);
             UpdateCounter(CounterLabel1, 0);
-            FillTextBoxes(QuestionsGroupBox, QuestionType.Default);
+            FillTextBoxes(QuestionsGroupBox);
         }
 
         private void NextQuestionButton1_Click(object sender, EventArgs e)
         {
-            if(QuestionController.CurrentQuestion.IsLast())
+            if (IsBoxesEmpty(QuestionsGroupBox))
             {
-                QuestionController.SaveCurrentQuestion(QuestionType.Default, QuestionsGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray());
-                ClearTextBoxes(QuestionsGroupBox);
+                //MessageBox.Show("Заполните все поля!");
+                //return;
+            }
+            QuestionController.SaveCurrentQuestion(new Question(QuestionsGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray()));
+            ClearTextBoxes(QuestionsGroupBox);
+            if (QuestionController.CurrentQuestion.IsLast())
+            {
                 QuestionsGroupBox.Visible = false;
                 ReplacerQuestionGroupBox.Visible = true;
                 QuestionController.SetCounter(1, GameRules.replacerNumber);
                 UpdateCounter(CounterLabel2, 0);
-                FillTextBoxes(ReplacerQuestionGroupBox, QuestionType.ReplacerQuestion);
-                return;
+                QuestionController.CurrentQuestionState = QuestionType.ReplacerQuestion;
+                FillTextBoxes(ReplacerQuestionGroupBox);
             }
-
-            //if (IsBoxesEmpty(QuestionsGroupBox))
-            //    MessageBox.Show("Заполните все поля!");
             else
             {
-                QuestionController.SaveCurrentQuestion(QuestionType.Default, QuestionsGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray());
-                ClearTextBoxes(QuestionsGroupBox);
                 UpdateCounter(CounterLabel1, 1);
-                FillTextBoxes(QuestionsGroupBox, QuestionType.Default);
+                FillTextBoxes(QuestionsGroupBox);
             }
         }
 
@@ -76,9 +73,10 @@ namespace Millionaire
             }
             else
             {
+                QuestionController.SaveCurrentQuestion(new Question(QuestionsGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray()));
                 ClearTextBoxes(QuestionsGroupBox);
                 UpdateCounter(CounterLabel1, -1);
-                FillTextBoxes(QuestionsGroupBox, QuestionType.Default);
+                FillTextBoxes(QuestionsGroupBox);
             }
         }
 
@@ -94,12 +92,15 @@ namespace Millionaire
             }
         }
 
-        private void FillTextBoxes(GroupBox groupBox, QuestionType questionType)
+        private void FillTextBoxes(GroupBox groupBox)
         {
-            var temp = QuestionController.GetCurrentQuestion(questionType);
-            for (int i = 0; i < groupBox.Controls.OfType<TextBox>().ToArray().Length; i++)
+            if (QuestionController.GetCurrentQuestion() != null)
             {
-                groupBox.Controls.OfType<TextBox>().ToArray()[i].Text = temp[i];
+                var question = QuestionController.GetCurrentQuestion().GetQuestionData().ToList();
+                for (int i = 0; i < groupBox.Controls.OfType<TextBox>().ToArray().Length; i++)
+                {
+                    groupBox.Controls.OfType<TextBox>().ToArray()[i].Text = question[i];
+                }
             }
         }
 
@@ -125,21 +126,25 @@ namespace Millionaire
 
         private void NextQuestionButton2_Click(object sender, EventArgs e)
         {
+            if (IsBoxesEmpty(ReplacerQuestionGroupBox))
+            {
+                //MessageBox.Show("Заполните все поля!");
+                //return;
+            }
             if (QuestionController.CurrentQuestion.IsLast())
             {
+                QuestionController.SaveCurrentQuestion(new Question(ReplacerQuestionGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray()));
                 MessageBox.Show("Сохранено!");
                 QuestionController.SaveFile();
                 PackList.Items.Add(QuestionController.GetPackName());
                 Close();
             }
-            //if (IsBoxesEmpty(ReplacerQuestionGroupBox))
-            //    MessageBox.Show("Заполните все поля!");
             else
             {
-                QuestionController.SaveCurrentQuestion(QuestionType.ReplacerQuestion, ReplacerQuestionGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray());
+                QuestionController.SaveCurrentQuestion(new Question(ReplacerQuestionGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray()));
                 ClearTextBoxes(ReplacerQuestionGroupBox);
                 UpdateCounter(CounterLabel2, 1);
-                FillTextBoxes(ReplacerQuestionGroupBox, QuestionType.ReplacerQuestion);
+                FillTextBoxes(ReplacerQuestionGroupBox);
             }
         }
 
@@ -150,14 +155,15 @@ namespace Millionaire
                 PackNameGroupBox.Visible = false;
                 QuestionsGroupBox.Visible = true;
                 QuestionController.SetCounter(15, 15);
-                FillTextBoxes(QuestionsGroupBox, QuestionType.Default);
+                QuestionController.CurrentQuestionState = QuestionType.Default;
+                FillTextBoxes(QuestionsGroupBox);
             }
             else
             {
-                QuestionController.SaveCurrentQuestion(QuestionType.ReplacerQuestion, ReplacerQuestionGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray());
+                QuestionController.SaveCurrentQuestion(new Question(ReplacerQuestionGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray()));
                 ClearTextBoxes(ReplacerQuestionGroupBox);
                 UpdateCounter(CounterLabel2, - 1);
-                FillTextBoxes(ReplacerQuestionGroupBox, QuestionType.ReplacerQuestion);
+                FillTextBoxes(ReplacerQuestionGroupBox);
             }
         }
 
@@ -165,7 +171,7 @@ namespace Millionaire
         {
             if (PackList.SelectedItem != null)
             {
-                QuestionController.DeleteFile(PackList.SelectedItem.ToString(), PackList.SelectedIndex);
+                QuestionController.DeleteFile(PackList.SelectedItem.ToString());
                 PackList.Items.RemoveAt(PackList.SelectedIndex); 
             }
             else
@@ -184,6 +190,11 @@ namespace Millionaire
             }
             else
                 MessageBox.Show("Выберите набор для редактирования");
+        }
+
+        private void ConstructForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            QuestionController.Clear();
         }
     }
 }
