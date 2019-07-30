@@ -13,6 +13,6 @@ namespace Millionaire
         List<QuestionPack> GetQuestionPacksList();
 
         void DeleteQuestionPack(string fileName);
-        void SaveQuestionPack(QuestionPack questionPack);
+        void SaveQuestionPack(QuestionPack questionPack, IList<string> nameList);
     }
 }

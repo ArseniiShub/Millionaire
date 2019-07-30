@@ -42,24 +42,24 @@ namespace Millionaire
             this.InputPackNameTextBox = new System.Windows.Forms.TextBox();
             this.InputPackNameLabel = new System.Windows.Forms.Label();
             this.QuestionsGroupBox = new System.Windows.Forms.GroupBox();
-            this.CounterLabel1 = new System.Windows.Forms.Label();
-            this.InputWrongAnswerBox3 = new System.Windows.Forms.TextBox();
-            this.InputWrongAnswerBox2 = new System.Windows.Forms.TextBox();
-            this.InputWrongAnswerBox1 = new System.Windows.Forms.TextBox();
-            this.InputRightAnswerBox = new System.Windows.Forms.TextBox();
             this.InputQuestionBox = new System.Windows.Forms.TextBox();
+            this.InputRightAnswerBox = new System.Windows.Forms.TextBox();
+            this.InputWrongAnswerBox1 = new System.Windows.Forms.TextBox();
+            this.InputWrongAnswerBox2 = new System.Windows.Forms.TextBox();
+            this.InputWrongAnswerBox3 = new System.Windows.Forms.TextBox();
+            this.CounterLabel1 = new System.Windows.Forms.Label();
             this.InputWrongAnswersLabel1 = new System.Windows.Forms.Label();
             this.InputRightAnswerLabel1 = new System.Windows.Forms.Label();
             this.InputQuestionLabel1 = new System.Windows.Forms.Label();
             this.NextQuestionButton1 = new System.Windows.Forms.Button();
             this.PrevQuestionButton1 = new System.Windows.Forms.Button();
             this.ReplacerQuestionGroupBox = new System.Windows.Forms.GroupBox();
-            this.CounterLabel2 = new System.Windows.Forms.Label();
-            this.InputRepWrongAnswerBox3 = new System.Windows.Forms.TextBox();
-            this.InputRepWrongAnswerBox2 = new System.Windows.Forms.TextBox();
-            this.InputRepWrongAnswerBox1 = new System.Windows.Forms.TextBox();
-            this.InputRepRightAnswerBox = new System.Windows.Forms.TextBox();
             this.InputRepQuestionBox = new System.Windows.Forms.TextBox();
+            this.InputRepRightAnswerBox = new System.Windows.Forms.TextBox();
+            this.InputRepWrongAnswerBox1 = new System.Windows.Forms.TextBox();
+            this.InputRepWrongAnswerBox2 = new System.Windows.Forms.TextBox();
+            this.InputRepWrongAnswerBox3 = new System.Windows.Forms.TextBox();
+            this.CounterLabel2 = new System.Windows.Forms.Label();
             this.WrongAnswersLabel2 = new System.Windows.Forms.Label();
             this.RightAnswerLabel2 = new System.Windows.Forms.Label();
             this.InputQuestionLabel2 = new System.Windows.Forms.Label();
@@ -176,12 +176,12 @@ namespace Millionaire
             // 
             // QuestionsGroupBox
             // 
-            this.QuestionsGroupBox.Controls.Add(this.CounterLabel1);
-            this.QuestionsGroupBox.Controls.Add(this.InputWrongAnswerBox3);
-            this.QuestionsGroupBox.Controls.Add(this.InputWrongAnswerBox2);
-            this.QuestionsGroupBox.Controls.Add(this.InputWrongAnswerBox1);
-            this.QuestionsGroupBox.Controls.Add(this.InputRightAnswerBox);
             this.QuestionsGroupBox.Controls.Add(this.InputQuestionBox);
+            this.QuestionsGroupBox.Controls.Add(this.InputRightAnswerBox);
+            this.QuestionsGroupBox.Controls.Add(this.InputWrongAnswerBox1);
+            this.QuestionsGroupBox.Controls.Add(this.InputWrongAnswerBox2);
+            this.QuestionsGroupBox.Controls.Add(this.InputWrongAnswerBox3);
+            this.QuestionsGroupBox.Controls.Add(this.CounterLabel1);
             this.QuestionsGroupBox.Controls.Add(this.InputWrongAnswersLabel1);
             this.QuestionsGroupBox.Controls.Add(this.InputRightAnswerLabel1);
             this.QuestionsGroupBox.Controls.Add(this.InputQuestionLabel1);
@@ -194,34 +194,12 @@ namespace Millionaire
             this.QuestionsGroupBox.TabStop = false;
             this.QuestionsGroupBox.Visible = false;
             // 
-            // CounterLabel1
+            // InputQuestionBox
             // 
-            this.CounterLabel1.AutoSize = true;
-            this.CounterLabel1.Location = new System.Drawing.Point(36, 401);
-            this.CounterLabel1.Name = "CounterLabel1";
-            this.CounterLabel1.Size = new System.Drawing.Size(0, 13);
-            this.CounterLabel1.TabIndex = 3;
-            // 
-            // InputWrongAnswerBox3
-            // 
-            this.InputWrongAnswerBox3.Location = new System.Drawing.Point(100, 355);
-            this.InputWrongAnswerBox3.Name = "InputWrongAnswerBox3";
-            this.InputWrongAnswerBox3.Size = new System.Drawing.Size(300, 20);
-            this.InputWrongAnswerBox3.TabIndex = 6;
-            // 
-            // InputWrongAnswerBox2
-            // 
-            this.InputWrongAnswerBox2.Location = new System.Drawing.Point(100, 312);
-            this.InputWrongAnswerBox2.Name = "InputWrongAnswerBox2";
-            this.InputWrongAnswerBox2.Size = new System.Drawing.Size(300, 20);
-            this.InputWrongAnswerBox2.TabIndex = 6;
-            // 
-            // InputWrongAnswerBox1
-            // 
-            this.InputWrongAnswerBox1.Location = new System.Drawing.Point(100, 270);
-            this.InputWrongAnswerBox1.Name = "InputWrongAnswerBox1";
-            this.InputWrongAnswerBox1.Size = new System.Drawing.Size(300, 20);
-            this.InputWrongAnswerBox1.TabIndex = 6;
+            this.InputQuestionBox.Location = new System.Drawing.Point(100, 60);
+            this.InputQuestionBox.Name = "InputQuestionBox";
+            this.InputQuestionBox.Size = new System.Drawing.Size(300, 20);
+            this.InputQuestionBox.TabIndex = 5;
             // 
             // InputRightAnswerBox
             // 
@@ -230,12 +208,34 @@ namespace Millionaire
             this.InputRightAnswerBox.Size = new System.Drawing.Size(300, 20);
             this.InputRightAnswerBox.TabIndex = 6;
             // 
-            // InputQuestionBox
+            // InputWrongAnswerBox1
             // 
-            this.InputQuestionBox.Location = new System.Drawing.Point(100, 60);
-            this.InputQuestionBox.Name = "InputQuestionBox";
-            this.InputQuestionBox.Size = new System.Drawing.Size(300, 20);
-            this.InputQuestionBox.TabIndex = 5;
+            this.InputWrongAnswerBox1.Location = new System.Drawing.Point(100, 270);
+            this.InputWrongAnswerBox1.Name = "InputWrongAnswerBox1";
+            this.InputWrongAnswerBox1.Size = new System.Drawing.Size(300, 20);
+            this.InputWrongAnswerBox1.TabIndex = 6;
+            // 
+            // InputWrongAnswerBox2
+            // 
+            this.InputWrongAnswerBox2.Location = new System.Drawing.Point(100, 312);
+            this.InputWrongAnswerBox2.Name = "InputWrongAnswerBox2";
+            this.InputWrongAnswerBox2.Size = new System.Drawing.Size(300, 20);
+            this.InputWrongAnswerBox2.TabIndex = 6;
+            // 
+            // InputWrongAnswerBox3
+            // 
+            this.InputWrongAnswerBox3.Location = new System.Drawing.Point(100, 355);
+            this.InputWrongAnswerBox3.Name = "InputWrongAnswerBox3";
+            this.InputWrongAnswerBox3.Size = new System.Drawing.Size(300, 20);
+            this.InputWrongAnswerBox3.TabIndex = 6;
+            // 
+            // CounterLabel1
+            // 
+            this.CounterLabel1.AutoSize = true;
+            this.CounterLabel1.Location = new System.Drawing.Point(36, 401);
+            this.CounterLabel1.Name = "CounterLabel1";
+            this.CounterLabel1.Size = new System.Drawing.Size(0, 13);
+            this.CounterLabel1.TabIndex = 3;
             // 
             // InputWrongAnswersLabel1
             // 
@@ -288,12 +288,12 @@ namespace Millionaire
             // 
             // ReplacerQuestionGroupBox
             // 
-            this.ReplacerQuestionGroupBox.Controls.Add(this.CounterLabel2);
-            this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepWrongAnswerBox3);
-            this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepWrongAnswerBox2);
-            this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepWrongAnswerBox1);
-            this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepRightAnswerBox);
             this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepQuestionBox);
+            this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepRightAnswerBox);
+            this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepWrongAnswerBox1);
+            this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepWrongAnswerBox2);
+            this.ReplacerQuestionGroupBox.Controls.Add(this.InputRepWrongAnswerBox3);
+            this.ReplacerQuestionGroupBox.Controls.Add(this.CounterLabel2);
             this.ReplacerQuestionGroupBox.Controls.Add(this.WrongAnswersLabel2);
             this.ReplacerQuestionGroupBox.Controls.Add(this.RightAnswerLabel2);
             this.ReplacerQuestionGroupBox.Controls.Add(this.InputQuestionLabel2);
@@ -306,34 +306,12 @@ namespace Millionaire
             this.ReplacerQuestionGroupBox.TabStop = false;
             this.ReplacerQuestionGroupBox.Visible = false;
             // 
-            // CounterLabel2
+            // InputRepQuestionBox
             // 
-            this.CounterLabel2.AutoSize = true;
-            this.CounterLabel2.Location = new System.Drawing.Point(36, 401);
-            this.CounterLabel2.Name = "CounterLabel2";
-            this.CounterLabel2.Size = new System.Drawing.Size(0, 13);
-            this.CounterLabel2.TabIndex = 3;
-            // 
-            // InputRepWrongAnswerBox3
-            // 
-            this.InputRepWrongAnswerBox3.Location = new System.Drawing.Point(100, 355);
-            this.InputRepWrongAnswerBox3.Name = "InputRepWrongAnswerBox3";
-            this.InputRepWrongAnswerBox3.Size = new System.Drawing.Size(300, 20);
-            this.InputRepWrongAnswerBox3.TabIndex = 5;
-            // 
-            // InputRepWrongAnswerBox2
-            // 
-            this.InputRepWrongAnswerBox2.Location = new System.Drawing.Point(100, 312);
-            this.InputRepWrongAnswerBox2.Name = "InputRepWrongAnswerBox2";
-            this.InputRepWrongAnswerBox2.Size = new System.Drawing.Size(300, 20);
-            this.InputRepWrongAnswerBox2.TabIndex = 5;
-            // 
-            // InputRepWrongAnswerBox1
-            // 
-            this.InputRepWrongAnswerBox1.Location = new System.Drawing.Point(100, 270);
-            this.InputRepWrongAnswerBox1.Name = "InputRepWrongAnswerBox1";
-            this.InputRepWrongAnswerBox1.Size = new System.Drawing.Size(300, 20);
-            this.InputRepWrongAnswerBox1.TabIndex = 5;
+            this.InputRepQuestionBox.Location = new System.Drawing.Point(100, 60);
+            this.InputRepQuestionBox.Name = "InputRepQuestionBox";
+            this.InputRepQuestionBox.Size = new System.Drawing.Size(300, 20);
+            this.InputRepQuestionBox.TabIndex = 5;
             // 
             // InputRepRightAnswerBox
             // 
@@ -342,12 +320,34 @@ namespace Millionaire
             this.InputRepRightAnswerBox.Size = new System.Drawing.Size(300, 20);
             this.InputRepRightAnswerBox.TabIndex = 5;
             // 
-            // InputRepQuestionBox
+            // InputRepWrongAnswerBox1
             // 
-            this.InputRepQuestionBox.Location = new System.Drawing.Point(100, 60);
-            this.InputRepQuestionBox.Name = "InputRepQuestionBox";
-            this.InputRepQuestionBox.Size = new System.Drawing.Size(300, 20);
-            this.InputRepQuestionBox.TabIndex = 5;
+            this.InputRepWrongAnswerBox1.Location = new System.Drawing.Point(100, 270);
+            this.InputRepWrongAnswerBox1.Name = "InputRepWrongAnswerBox1";
+            this.InputRepWrongAnswerBox1.Size = new System.Drawing.Size(300, 20);
+            this.InputRepWrongAnswerBox1.TabIndex = 5;
+            // 
+            // InputRepWrongAnswerBox2
+            // 
+            this.InputRepWrongAnswerBox2.Location = new System.Drawing.Point(100, 312);
+            this.InputRepWrongAnswerBox2.Name = "InputRepWrongAnswerBox2";
+            this.InputRepWrongAnswerBox2.Size = new System.Drawing.Size(300, 20);
+            this.InputRepWrongAnswerBox2.TabIndex = 5;
+            // 
+            // InputRepWrongAnswerBox3
+            // 
+            this.InputRepWrongAnswerBox3.Location = new System.Drawing.Point(100, 355);
+            this.InputRepWrongAnswerBox3.Name = "InputRepWrongAnswerBox3";
+            this.InputRepWrongAnswerBox3.Size = new System.Drawing.Size(300, 20);
+            this.InputRepWrongAnswerBox3.TabIndex = 5;
+            // 
+            // CounterLabel2
+            // 
+            this.CounterLabel2.AutoSize = true;
+            this.CounterLabel2.Location = new System.Drawing.Point(36, 401);
+            this.CounterLabel2.Name = "CounterLabel2";
+            this.CounterLabel2.Size = new System.Drawing.Size(0, 13);
+            this.CounterLabel2.TabIndex = 3;
             // 
             // WrongAnswersLabel2
             // 
@@ -406,6 +406,7 @@ namespace Millionaire
             this.Controls.Add(this.QuestionsGroupBox);
             this.Controls.Add(this.ReplacerQuestionGroupBox);
             this.Name = "ConstructForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConstructForm_FormClosed);
             this.Load += new System.EventHandler(this.ConstructForm_Load);
             this.InitialGroupBox.ResumeLayout(false);
             this.PackNameGroupBox.ResumeLayout(false);

@@ -30,7 +30,6 @@ namespace Millionaire
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.playerNameLabel = new System.Windows.Forms.Label();
             this.playerNameBox = new System.Windows.Forms.TextBox();
             this.startGameButton = new System.Windows.Forms.Button();
@@ -51,7 +50,6 @@ namespace Millionaire
             this.prizeLabel = new System.Windows.Forms.Label();
             this.questionNumLabel = new System.Windows.Forms.Label();
             this.questionLabel = new System.Windows.Forms.Label();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.initialPanel.SuspendLayout();
             this.gamePanel.SuspendLayout();
             this.answersPanel.SuspendLayout();
@@ -258,11 +256,6 @@ namespace Millionaire
             this.questionLabel.Text = "label1";
             this.questionLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // timer
-            // 
-            this.timer.Interval = 1000;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,6 +296,5 @@ namespace Millionaire
         private System.Windows.Forms.Button answerButton2;
         private System.Windows.Forms.Button answerButton3;
         private System.Windows.Forms.Label timerLabel;
-        private System.Windows.Forms.Timer timer;
     }
 }
