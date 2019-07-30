@@ -61,14 +61,6 @@ namespace Millionaire
                 fileName = $"{questionPack.packName} ({conflictAddition})";
             }
             questionPack.packName = fileName;
-            try
-            {
-                questionPack.id = QuestionController.idNameDict.Keys.Max() + 1;
-            }
-            catch
-            {
-                questionPack.id = 0;
-            }
             
             XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
             using (FileStream fs = new FileStream($"{questionsPath}\\{fileName}.xml", FileMode.OpenOrCreate))
