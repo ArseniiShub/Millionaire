@@ -10,5 +10,6 @@ namespace Millionaire
     {
         public const int questionNumber = 15;
         public const int replacerNumber = 3;
+        public const int timeToAnswer = 60;
     }
 }

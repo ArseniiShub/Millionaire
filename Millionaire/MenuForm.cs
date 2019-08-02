@@ -43,8 +43,7 @@ namespace Millionaire
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            IDataProvider dataProvider = new XmlDataProvider();
-            GameForm gameForm = new GameForm(dataProvider);
+            GameForm gameForm = new GameForm();
             gameForm.ShowDialog();
         }
 

@@ -30,6 +30,7 @@ namespace Millionaire
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.playerNameLabel = new System.Windows.Forms.Label();
             this.playerNameBox = new System.Windows.Forms.TextBox();
             this.startGameButton = new System.Windows.Forms.Button();
@@ -37,10 +38,11 @@ namespace Millionaire
             this.choosePackGroupBox = new System.Windows.Forms.GroupBox();
             this.gamePanel = new System.Windows.Forms.Panel();
             this.answersPanel = new System.Windows.Forms.Panel();
-            this.answerButton4 = new System.Windows.Forms.Button();
+            this.questionLabel = new System.Windows.Forms.Label();
+            this.answerButton1 = new System.Windows.Forms.Button();
             this.answerButton2 = new System.Windows.Forms.Button();
             this.answerButton3 = new System.Windows.Forms.Button();
-            this.answerButton1 = new System.Windows.Forms.Button();
+            this.answerButton4 = new System.Windows.Forms.Button();
             this.helpButton = new System.Windows.Forms.Button();
             this.hint4 = new System.Windows.Forms.Button();
             this.hint3 = new System.Windows.Forms.Button();
@@ -48,8 +50,8 @@ namespace Millionaire
             this.hint1 = new System.Windows.Forms.Button();
             this.timerLabel = new System.Windows.Forms.Label();
             this.prizeLabel = new System.Windows.Forms.Label();
-            this.questionNumLabel = new System.Windows.Forms.Label();
-            this.questionLabel = new System.Windows.Forms.Label();
+            this.counterLabel = new System.Windows.Forms.Label();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.initialPanel.SuspendLayout();
             this.gamePanel.SuspendLayout();
             this.answersPanel.SuspendLayout();
@@ -113,8 +115,7 @@ namespace Millionaire
             this.gamePanel.Controls.Add(this.hint1);
             this.gamePanel.Controls.Add(this.timerLabel);
             this.gamePanel.Controls.Add(this.prizeLabel);
-            this.gamePanel.Controls.Add(this.questionNumLabel);
-            this.gamePanel.Controls.Add(this.questionLabel);
+            this.gamePanel.Controls.Add(this.counterLabel);
             this.gamePanel.Location = new System.Drawing.Point(0, 0);
             this.gamePanel.Name = "gamePanel";
             this.gamePanel.Size = new System.Drawing.Size(850, 650);
@@ -124,27 +125,39 @@ namespace Millionaire
             // answersPanel
             // 
             this.answersPanel.BackColor = System.Drawing.Color.White;
-            this.answersPanel.Controls.Add(this.answerButton4);
+            this.answersPanel.Controls.Add(this.questionLabel);
+            this.answersPanel.Controls.Add(this.answerButton1);
             this.answersPanel.Controls.Add(this.answerButton2);
             this.answersPanel.Controls.Add(this.answerButton3);
-            this.answersPanel.Controls.Add(this.answerButton1);
-            this.answersPanel.Location = new System.Drawing.Point(100, 455);
+            this.answersPanel.Controls.Add(this.answerButton4);
+            this.answersPanel.Location = new System.Drawing.Point(100, 369);
             this.answersPanel.Name = "answersPanel";
-            this.answersPanel.Size = new System.Drawing.Size(650, 100);
+            this.answersPanel.Size = new System.Drawing.Size(650, 180);
             this.answersPanel.TabIndex = 6;
             // 
-            // answerButton4
+            // questionLabel
             // 
-            this.answerButton4.Location = new System.Drawing.Point(368, 59);
-            this.answerButton4.Name = "answerButton4";
-            this.answerButton4.Size = new System.Drawing.Size(250, 25);
-            this.answerButton4.TabIndex = 0;
-            this.answerButton4.UseVisualStyleBackColor = true;
-            this.answerButton4.Click += new System.EventHandler(this.answerButtonClick);
+            this.questionLabel.BackColor = System.Drawing.SystemColors.Control;
+            this.questionLabel.Location = new System.Drawing.Point(25, 25);
+            this.questionLabel.Name = "questionLabel";
+            this.questionLabel.Size = new System.Drawing.Size(600, 60);
+            this.questionLabel.TabIndex = 1;
+            this.questionLabel.Text = "questionLabel";
+            this.questionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // answerButton1
+            // 
+            this.answerButton1.BackColor = System.Drawing.Color.LightGray;
+            this.answerButton1.Location = new System.Drawing.Point(25, 100);
+            this.answerButton1.Name = "answerButton1";
+            this.answerButton1.Size = new System.Drawing.Size(250, 25);
+            this.answerButton1.TabIndex = 0;
+            this.answerButton1.UseVisualStyleBackColor = false;
+            this.answerButton1.Click += new System.EventHandler(this.answerButtonClick);
             // 
             // answerButton2
             // 
-            this.answerButton2.Location = new System.Drawing.Point(368, 18);
+            this.answerButton2.Location = new System.Drawing.Point(375, 100);
             this.answerButton2.Name = "answerButton2";
             this.answerButton2.Size = new System.Drawing.Size(250, 25);
             this.answerButton2.TabIndex = 0;
@@ -153,21 +166,21 @@ namespace Millionaire
             // 
             // answerButton3
             // 
-            this.answerButton3.Location = new System.Drawing.Point(34, 59);
+            this.answerButton3.Location = new System.Drawing.Point(25, 140);
             this.answerButton3.Name = "answerButton3";
             this.answerButton3.Size = new System.Drawing.Size(250, 25);
             this.answerButton3.TabIndex = 0;
             this.answerButton3.UseVisualStyleBackColor = true;
             this.answerButton3.Click += new System.EventHandler(this.answerButtonClick);
             // 
-            // answerButton1
+            // answerButton4
             // 
-            this.answerButton1.Location = new System.Drawing.Point(34, 18);
-            this.answerButton1.Name = "answerButton1";
-            this.answerButton1.Size = new System.Drawing.Size(250, 25);
-            this.answerButton1.TabIndex = 0;
-            this.answerButton1.UseVisualStyleBackColor = true;
-            this.answerButton1.Click += new System.EventHandler(this.answerButtonClick);
+            this.answerButton4.Location = new System.Drawing.Point(375, 140);
+            this.answerButton4.Name = "answerButton4";
+            this.answerButton4.Size = new System.Drawing.Size(250, 25);
+            this.answerButton4.TabIndex = 0;
+            this.answerButton4.UseVisualStyleBackColor = true;
+            this.answerButton4.Click += new System.EventHandler(this.answerButtonClick);
             // 
             // helpButton
             // 
@@ -238,23 +251,18 @@ namespace Millionaire
             this.prizeLabel.TabIndex = 0;
             this.prizeLabel.Text = "label1";
             // 
-            // questionNumLabel
+            // counterLabel
             // 
-            this.questionNumLabel.AutoSize = true;
-            this.questionNumLabel.Location = new System.Drawing.Point(20, 40);
-            this.questionNumLabel.Name = "questionNumLabel";
-            this.questionNumLabel.Size = new System.Drawing.Size(35, 13);
-            this.questionNumLabel.TabIndex = 0;
-            this.questionNumLabel.Text = "label1";
+            this.counterLabel.AutoSize = true;
+            this.counterLabel.Location = new System.Drawing.Point(20, 40);
+            this.counterLabel.Name = "counterLabel";
+            this.counterLabel.Size = new System.Drawing.Size(35, 13);
+            this.counterLabel.TabIndex = 0;
+            this.counterLabel.Text = "label1";
             // 
-            // questionLabel
+            // timer
             // 
-            this.questionLabel.Location = new System.Drawing.Point(20, 380);
-            this.questionLabel.Name = "questionLabel";
-            this.questionLabel.Size = new System.Drawing.Size(810, 15);
-            this.questionLabel.TabIndex = 0;
-            this.questionLabel.Text = "label1";
-            this.questionLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.timer.Tick += new System.EventHandler(this.Timer_Tick);
             // 
             // GameForm
             // 
@@ -287,8 +295,7 @@ namespace Millionaire
         private System.Windows.Forms.Button hint2;
         private System.Windows.Forms.Button hint1;
         private System.Windows.Forms.Label prizeLabel;
-        private System.Windows.Forms.Label questionNumLabel;
-        private System.Windows.Forms.Label questionLabel;
+        private System.Windows.Forms.Label counterLabel;
         private System.Windows.Forms.Button helpButton;
         private System.Windows.Forms.Panel answersPanel;
         private System.Windows.Forms.Button answerButton1;
@@ -296,5 +303,7 @@ namespace Millionaire
         private System.Windows.Forms.Button answerButton2;
         private System.Windows.Forms.Button answerButton3;
         private System.Windows.Forms.Label timerLabel;
+        private System.Windows.Forms.Label questionLabel;
+        private System.Windows.Forms.Timer timer;
     }
 }
