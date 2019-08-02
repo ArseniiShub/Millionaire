@@ -15,96 +15,102 @@ namespace Millionaire
 {
     public partial class GameForm : Form
     {
-        public GameForm(IDataProvider dataProvider)
+        public GameForm()
         {
             InitializeComponent();
-            DataProvider = dataProvider;
-            //CreateRadio();
+            CreateRadio();
+            timer.Interval = 1000;
         }
-        public IDataProvider DataProvider { get; set; }
 
-        int currentQuestion = -1;
-        QuestionPack questionPack;
-
-        //private void CreateRadio()
-        //{
-        //    if (DataProvider.TryGetQuestionPackList(out Dictionary<int, string> quizList))
-        //    {
-        //        int YPosition = 1;
-        //        foreach (var quizInfo in quizList)
-        //        {
-        //            RadioButton radioButton = new RadioButton { Text = $"{quizInfo.Value}", Location = new Point(10, YPosition++ * 20), Tag = quizInfo.Key };
-        //            choosePackGroupBox.Controls.Add(radioButton);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("ErrorCreatingRadio");//Выход?
-        //    }
-        //}
+        private void CreateRadio()
+        {
+            int YPosition = 1;
+            foreach (var item in QuestionController.packNameList)
+            {
+                RadioButton radioButton = new RadioButton { Text = $"{item}", Location = new Point(10, YPosition++ * 20)};
+                choosePackGroupBox.Controls.Add(radioButton);
+            }
+        }
 
         private void startGameButton_Click(object sender, EventArgs e)
         {
             var selectedButton = choosePackGroupBox.Controls.OfType<RadioButton>().Where(x => x.Checked).FirstOrDefault();
-            int id = Convert.ToInt32(selectedButton.Tag);
-            questionPack = DataProvider.GetQuestionPack(id);
+            QuestionController.LoadQuestionPack(selectedButton.Text);
             if (string.IsNullOrWhiteSpace(playerNameBox.Text))
                 return;
             initialPanel.Visible = false;
             gamePanel.Visible = true;
-            timerLabel.Text = "60";
-            timer.Enabled = true;
+            QuestionController.SetCounter(0, GameRules.questionNumber);
             NewQuestion();
         }
 
         private void NewQuestion()
         {
             AnswersVisibility(true);
-            currentQuestion++;
-            if (currentQuestion >= questionPack.questions.Length)
+            if (QuestionController.CurrentQuestion.index >= GameRules.questionNumber)
                 Victory();
-            questionNumLabel.Text = $"{currentQuestion + 1} / {questionPack.questions.Length}"; 
-            questionLabel.Text = questionPack.questions[currentQuestion].questionText;
-            answersPanel.Controls[0].Text = questionPack.questions[currentQuestion].rightAnswer;
-            answersPanel.Controls[1].Text = questionPack.questions[currentQuestion].wrongAnswers[0];
-            answersPanel.Controls[2].Text = questionPack.questions[currentQuestion].wrongAnswers[1];
-            answersPanel.Controls[3].Text = questionPack.questions[currentQuestion].wrongAnswers[2];
+            UpdateCounter(counterLabel, 1);
+            FillQuestionData(answersPanel);
             Shuffle();
-            timerLabel.Text = "60";
-            prizeLabel.Text = $"Текущий выигрыш: {Prize.GetCurrentPrize(currentQuestion)} рублей";
+            timerLabel.Text = GameRules.timeToAnswer.ToString();
+            timer.Start();
+            prizeLabel.Text = $"Текущий выигрыш: {Prize.GetCurrentPrize(QuestionController.CurrentQuestion.index)} рублей";
+        }
+
+        private void FillQuestionData(Panel panel)
+        {
+            if (QuestionController.GetCurrentQuestion() != null)
+            {
+                var question = QuestionController.GetCurrentQuestion().GetQuestionData().ToList();
+                panel.Controls[0].Text = question[0];
+                for (int i = 1; i < panel.Controls.Count; i++)
+                {
+                    panel.Controls[i].Text = question[i];
+                }
+            }
+        }
+
+        private void UpdateCounter(Label counter, int currentQuestionNumberChanged)
+        {
+            QuestionController.CurrentQuestion.index += currentQuestionNumberChanged;
+            counter.Text = QuestionController.GetCurrentProgress();
         }
 
         private void AnswersVisibility(bool b)
         {
-            foreach (var item in answersPanel.Controls)
+            foreach (var item in answersPanel.Controls.OfType<Button>())
             {
-                ((Button)item).Visible = b;
+                item.Visible = b;
             }
         }
 
         async private void answerButtonClick(object sender, EventArgs e)
         {
-            if (((Button)sender).Text == questionPack.questions[currentQuestion].rightAnswer)
+            answersPanel.Enabled = false;
+            if (QuestionController.isRightAnswer(((Button)sender).Text))
             {
                 ((Button)sender).BackColor = Color.ForestGreen;
                 await Task.Delay(3000);
-                ((Button)sender).BackColor = helpButton.BackColor;
+                ((Button)sender).BackColor = Color.LightGray;
+                answersPanel.Enabled = true;
                 NewQuestion();
             }
-            else if(hint2.Enabled)
+            else
+            {
+                ((Button)sender).BackColor = Color.Red;
+                answersPanel.Controls.OfType<Button>().Where(x => QuestionController.isRightAnswer(x.Text)).FirstOrDefault().BackColor = Color.ForestGreen;
+                await Task.Delay(3000);
                 GameOver();
-            hint2.Enabled = true;
-                
+            }     
         }
 
         private void Shuffle()
         {
             Random rand = new Random();
-
             for (int i = answersPanel.Controls.Count - 1; i >= 1; i--)
             {
-                int j = rand.Next(i + 1);
-                
+                int j = rand.Next(1, i);
+
                 string tmp = answersPanel.Controls[j].Text;
                 answersPanel.Controls[j].Text = answersPanel.Controls[i].Text;
                 answersPanel.Controls[i].Text = tmp;
@@ -115,13 +121,6 @@ namespace Millionaire
         {
             HelpForm helpForm = new HelpForm();
             helpForm.ShowDialog();
-        }
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            timerLabel.Text = (Convert.ToInt32(timerLabel.Text) - timer.Interval / 1000).ToString();
-            if (timerLabel.Text == "-1")
-                GameOver();
         }
 
         private void Victory()
@@ -136,25 +135,24 @@ namespace Millionaire
 
         private void hint4_Click(object sender, EventArgs e)
         {
-            hint4.Visible = false;
-            timerLabel.Text = (Convert.ToInt32(timerLabel.Text) + 120).ToString();
         }
 
         private void hint2_Click(object sender, EventArgs e)
         {
-            hint2.Enabled = false;
-            hint2.Visible = false;
         }
 
         private void hint1_Click(object sender, EventArgs e)
         {
-            hint1.Visible = false;
-            for (int i = 0, n = 0; n < 2; i++)
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            timerLabel.Text = (Convert.ToInt32(timerLabel.Text) - 1).ToString();
+            if (Convert.ToInt32(timerLabel.Text) < 0)
             {
-                if (!(answersPanel.Controls[i].Text != questionPack.questions[currentQuestion].rightAnswer))
-                    continue;
-                answersPanel.Controls[i].Visible = false;
-                n++;
+                timer.Stop();
+                MessageBox.Show("Время вышло!");
+                GameOver();
             }
         }
     }
