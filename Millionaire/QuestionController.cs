@@ -6,110 +6,101 @@ using System.Threading.Tasks;
 
 namespace Millionaire
 {
-    static class QuestionController //Фабрика? Переделать в динамический класс
+    class QuestionController
     {
-        static QuestionPack questionPack = new QuestionPack();
+        QuestionPack questionPack = new QuestionPack();
         //List<IHint>
         //IGameRules gameRules { get; set; }
         public static IDataProvider DataProvider;
         public static List<string> packNameList = new List<string>();
-        public static QuestionType CurrentQuestionState { get; set; } = QuestionType.Default;
+        public QuestionType CurrentQuestionState { get; set; } = QuestionType.Default;
 
-        public static void Clear()
+        public int CurrentIndex { get; set; }
+
+        public string CurrentProgress
         {
-            questionPack = new QuestionPack();
-            CurrentQuestion.index = 0;
-            CurrentQuestionState = QuestionType.Default;
-        }
-
-        public static class CurrentQuestion //Change
-        {
-            public static int index = 0;
-
-            public static bool IsFirst()
+            get
             {
-                return index == 0;
-            }
-            public static bool IsLast()
-            {
-                return index == questionNumber - 1;
+                switch (CurrentQuestionState)
+                {
+                    case QuestionType.Default: return $"{CurrentIndex + 1} / {GameRules.questionNumber}";
+                    case QuestionType.ReplacerQuestion: return $"{CurrentIndex + 1} / {GameRules.replacerNumber}";
+                    default: throw new NotImplementedException("Unknown Question Type");
+                }
             }
         }
 
-        static int questionNumber = GameRules.questionNumber;
-
-        public static string GetCurrentProgress() //Заменить на свойство
+        public void SetQuestionController(int currentQuestionIndex, QuestionType questionType)
         {
-            return $"{CurrentQuestion.index + 1} / {questionNumber}";
+            CurrentIndex = currentQuestionIndex;
+            CurrentQuestionState = questionType;
+        }
+        public void SetQuestionController(int currentQuestionIndex)
+        {
+            CurrentIndex = currentQuestionIndex;
         }
 
-        public static void SetCounter(int currentQuestion, int questionNumber)
-        {
-            CurrentQuestion.index = currentQuestion - 1;
-            QuestionController.questionNumber = questionNumber;
-        }
-
-        public static bool IsRightAnswer(string answer)
+        public bool IsRightAnswer(string answer)
         {
             switch (CurrentQuestionState)
             {
-                case QuestionType.Default: return answer == questionPack.questions[CurrentQuestion.index].RightAnswer;
-                case QuestionType.ReplacerQuestion: return answer == questionPack.replacerQuestions[CurrentQuestion.index].RightAnswer;
+                case QuestionType.Default: return answer == questionPack.questions[CurrentIndex].RightAnswer;
+                case QuestionType.ReplacerQuestion: return answer == questionPack.replacerQuestions[CurrentIndex].RightAnswer;
                 default: throw new NotImplementedException("Unknown Question Type");
             }
         }
 
-        public static void SavePackName(string name)
+        public void SavePackName(string name)
         {
             questionPack.packName = name;
         }
 
-        public static Question GetCurrentQuestion()
+        public Question GetCurrentQuestion()
         {
             switch (CurrentQuestionState)
             {
                 case QuestionType.Default:
-                    return questionPack.questions[CurrentQuestion.index];
+                    return questionPack.questions[CurrentIndex];
                 case QuestionType.ReplacerQuestion:
-                    return questionPack.replacerQuestions[CurrentQuestion.index];
+                    return questionPack.replacerQuestions[CurrentIndex];
                 default: throw new Exception("Unknown Question Type");
             }
         }
 
-        public static void SaveCurrentQuestion(Question question)
+        public void SaveCurrentQuestion(Question question)
         {
             switch (CurrentQuestionState)
             {
                 case QuestionType.Default:
-                    questionPack.questions[CurrentQuestion.index] = question;
+                    questionPack.questions[CurrentIndex] = question;
                     break;
                 case QuestionType.ReplacerQuestion:
-                    questionPack.replacerQuestions[CurrentQuestion.index] = question;
+                    questionPack.replacerQuestions[CurrentIndex] = question;
                     break;
                 default:
                     throw new Exception("Unknown Question Type");
             }
         }
 
-        public static string GetPackName()
+        public string GetPackName()
         {
             return questionPack.packName;
         }
 
-        public static void SaveFile()
+        public void SaveFile()
         {
             questionPack.isCompleted = true;
             DataProvider.SaveQuestionPack(questionPack, packNameList);
             packNameList.Add(questionPack.packName);
         }
 
-        public static void DeleteFile(string fileName)
+        public void DeleteFile(string fileName)
         {
             DataProvider.DeleteQuestionPack(fileName);
             packNameList.Remove(fileName);
         }
 
-        public static void LoadQuestionPack(string packName)
+        public void LoadQuestionPack(string packName)
         {
             questionPack = DataProvider.GetQuestionPack(packName);
         }

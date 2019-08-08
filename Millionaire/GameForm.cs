@@ -15,6 +15,7 @@ namespace Millionaire
 {
     public partial class GameForm : Form
     {
+        QuestionController questionController = new QuestionController();
         public GameForm()
         {
             InitializeComponent();
@@ -35,33 +36,34 @@ namespace Millionaire
         private void startGameButton_Click(object sender, EventArgs e)
         {
             var selectedButton = choosePackGroupBox.Controls.OfType<RadioButton>().Where(x => x.Checked).FirstOrDefault();
-            QuestionController.LoadQuestionPack(selectedButton.Text);
+            questionController.LoadQuestionPack(selectedButton.Text);
             if (string.IsNullOrWhiteSpace(playerNameBox.Text))
                 return;
             initialPanel.Visible = false;
             gamePanel.Visible = true;
-            QuestionController.SetCounter(0, GameRules.questionNumber);
+            questionController.SetQuestionController(-1, QuestionType.Default);
             NewQuestion();
         }
 
         private void NewQuestion()
         {
-            AnswersVisibility(true);
-            if (QuestionController.CurrentQuestion.index >= GameRules.questionNumber)
+            if (questionController.CurrentIndex == GameRules.questionNumber)
                 Victory();
+
+            AnswersVisibility(true);
             UpdateCounter(counterLabel, 1);
             FillQuestionData(answersPanel);
             Shuffle();
             timerLabel.Text = GameRules.timeToAnswer.ToString();
             timer.Start();
-            prizeLabel.Text = $"Текущий выигрыш: {Prize.GetCurrentPrize(QuestionController.CurrentQuestion.index)} рублей";
+            prizeLabel.Text = $"Текущий выигрыш: {Prize.GetCurrentPrize(questionController.CurrentIndex)} рублей";
         }
 
         private void FillQuestionData(Panel panel)
         {
-            if (QuestionController.GetCurrentQuestion() != null)
+            if (questionController.GetCurrentQuestion() != null)
             {
-                var question = QuestionController.GetCurrentQuestion().GetQuestionData().ToList();
+                var question = questionController.GetCurrentQuestion().GetQuestionData().ToList();
                 panel.Controls[0].Text = question[0];
                 for (int i = 1; i < panel.Controls.Count; i++)
                 {
@@ -72,8 +74,8 @@ namespace Millionaire
 
         private void UpdateCounter(Label counter, int currentQuestionNumberChanged)
         {
-            QuestionController.CurrentQuestion.index += currentQuestionNumberChanged;
-            counter.Text = QuestionController.GetCurrentProgress();
+            questionController.CurrentIndex += currentQuestionNumberChanged;
+            counter.Text = questionController.CurrentProgress;
         }
 
         private void AnswersVisibility(bool b)
@@ -87,7 +89,7 @@ namespace Millionaire
         async private void answerButtonClick(object sender, EventArgs e)
         {
             answersPanel.Enabled = false;
-            if (QuestionController.IsRightAnswer(((Button)sender).Text))
+            if (questionController.IsRightAnswer(((Button)sender).Text))
             {
                 ((Button)sender).BackColor = Color.ForestGreen;
                 await Task.Delay(3000);
@@ -98,7 +100,7 @@ namespace Millionaire
             else
             {
                 ((Button)sender).BackColor = Color.Red;
-                answersPanel.Controls.OfType<Button>().Where(x => QuestionController.IsRightAnswer(x.Text)).FirstOrDefault().BackColor = Color.ForestGreen;
+                answersPanel.Controls.OfType<Button>().Where(x => questionController.IsRightAnswer(x.Text)).FirstOrDefault().BackColor = Color.ForestGreen;
                 await Task.Delay(3000);
                 GameOver();
             }     
