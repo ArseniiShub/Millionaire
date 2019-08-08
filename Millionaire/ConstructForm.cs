@@ -94,28 +94,18 @@ namespace Millionaire
 
         private void FillTextBoxes(GroupBox groupBox)
         {
-            if (QuestionController.GetCurrentQuestion() != null)
-            {
-                var question = QuestionController.GetCurrentQuestion().GetQuestionData().ToList();
-                for (int i = 0; i < groupBox.Controls.OfType<TextBox>().ToArray().Length; i++)
-                {
-                    groupBox.Controls.OfType<TextBox>().ToArray()[i].Text = question[i];
-                }
-            }
+            if (QuestionController.GetCurrentQuestion() == null)
+                return;
+
+            var source = QuestionController.GetCurrentQuestion().GetQuestionData().ToList();
+            var dest = groupBox.Controls.OfType<TextBox>().ToList();
+            for (int i = 0; i < dest.Count; i++)
+                dest[i].Text = source[i];
         }
 
         private bool IsBoxesEmpty(GroupBox groupBox)
         {
-            foreach (var item in groupBox.Controls)
-            {
-                try
-                {
-                    if (String.IsNullOrWhiteSpace(((TextBox)item).Text))
-                        return true;
-                }
-                catch { }
-            }
-            return false;
+            return groupBox.Controls.OfType<TextBox>().Any(x => String.IsNullOrEmpty(x.Text));
         }
 
         private void UpdateCounter(Label counter, int currentQuestionNumberChanged)

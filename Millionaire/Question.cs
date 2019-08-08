@@ -8,9 +8,7 @@ namespace Millionaire
 {
     public class Question
     {
-        public Question()
-        {
-        }
+        public Question() { }
         public Question(IList<string> lines)
         {
             QuestionText = lines[0];

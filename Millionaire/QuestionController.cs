@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Millionaire
 {
-    static class QuestionController //Logic
+    static class QuestionController //Фабрика? Переделать в динамический класс
     {
         static QuestionPack questionPack = new QuestionPack();
+        //List<IHint>
+        //IGameRules gameRules { get; set; }
         public static IDataProvider DataProvider;
         public static List<string> packNameList = new List<string>();
         public static QuestionType CurrentQuestionState { get; set; } = QuestionType.Default;
@@ -20,7 +22,7 @@ namespace Millionaire
             CurrentQuestionState = QuestionType.Default;
         }
 
-        public static class CurrentQuestion 
+        public static class CurrentQuestion //Change
         {
             public static int index = 0;
 
@@ -30,30 +32,30 @@ namespace Millionaire
             }
             public static bool IsLast()
             {
-                return index == currentQuestionNumber - 1;
+                return index == questionNumber - 1;
             }
         }
 
-        static int currentQuestionNumber = GameRules.questionNumber;
+        static int questionNumber = GameRules.questionNumber;
 
-        public static string GetCurrentProgress()
+        public static string GetCurrentProgress() //Заменить на свойство
         {
-            return $"{CurrentQuestion.index + 1} / {currentQuestionNumber}";
+            return $"{CurrentQuestion.index + 1} / {questionNumber}";
         }
 
         public static void SetCounter(int currentQuestion, int questionNumber)
         {
             CurrentQuestion.index = currentQuestion - 1;
-            currentQuestionNumber = questionNumber;
+            QuestionController.questionNumber = questionNumber;
         }
 
-        public static bool isRightAnswer(string answer)
+        public static bool IsRightAnswer(string answer)
         {
             switch (CurrentQuestionState)
             {
                 case QuestionType.Default: return answer == questionPack.questions[CurrentQuestion.index].RightAnswer;
                 case QuestionType.ReplacerQuestion: return answer == questionPack.replacerQuestions[CurrentQuestion.index].RightAnswer;
-                default: throw new Exception("Unknown Question Type");
+                default: throw new NotImplementedException("Unknown Question Type");
             }
         }
 

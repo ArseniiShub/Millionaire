@@ -87,7 +87,7 @@ namespace Millionaire
         async private void answerButtonClick(object sender, EventArgs e)
         {
             answersPanel.Enabled = false;
-            if (QuestionController.isRightAnswer(((Button)sender).Text))
+            if (QuestionController.IsRightAnswer(((Button)sender).Text))
             {
                 ((Button)sender).BackColor = Color.ForestGreen;
                 await Task.Delay(3000);
@@ -98,7 +98,7 @@ namespace Millionaire
             else
             {
                 ((Button)sender).BackColor = Color.Red;
-                answersPanel.Controls.OfType<Button>().Where(x => QuestionController.isRightAnswer(x.Text)).FirstOrDefault().BackColor = Color.ForestGreen;
+                answersPanel.Controls.OfType<Button>().Where(x => QuestionController.IsRightAnswer(x.Text)).FirstOrDefault().BackColor = Color.ForestGreen;
                 await Task.Delay(3000);
                 GameOver();
             }     
@@ -145,13 +145,13 @@ namespace Millionaire
         {
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object sender, EventArgs e) //QC timer -> обработчик -> здесь
         {
             timerLabel.Text = (Convert.ToInt32(timerLabel.Text) - 1).ToString();
-            if (Convert.ToInt32(timerLabel.Text) < 0)
+            if (Convert.ToInt32(timerLabel.Text) == 0)
             {
                 timer.Stop();
-                MessageBox.Show("Время вышло!");
+                MessageBox.Show("Время вышло!"); //IInteractiveService
                 GameOver();
             }
         }
