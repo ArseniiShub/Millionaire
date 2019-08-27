@@ -7,15 +7,13 @@ namespace Millionaire
 {
     public partial class ConstructForm : Form //Visual
     {
-        QuestionController questionController = new QuestionController();
-        public ConstructForm()
+        QuestionController questionController;
+        public ConstructForm(IDataProvider dataProvider, IGameRules gameRules)
         {
+            questionController = new QuestionController(dataProvider, gameRules);
+            questionController.RefreshPackNameList();
             InitializeComponent();
-        }
-
-        private void ConstructForm_Load(object sender, EventArgs e)
-        {
-            PackList.Items.AddRange(QuestionController.packNameList.ToArray());
+            PackList.Items.AddRange(questionController.packNameList.ToArray());
         }
 
         private void AddButton_Click(object sender, EventArgs e)
@@ -49,7 +47,7 @@ namespace Millionaire
             }
             questionController.SaveCurrentQuestion(new Question(QuestionsGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray()));
             ClearTextBoxes(QuestionsGroupBox);
-            if (questionController.CurrentIndex == GameRules.questionNumber - 1)
+            if (questionController.CurrentIndex == questionController.GameRules.QuestionNumber - 1)
             {
                 QuestionsGroupBox.Visible = false;
                 ReplacerQuestionGroupBox.Visible = true;
@@ -121,7 +119,7 @@ namespace Millionaire
                 //MessageBox.Show("Заполните все поля!");
                 //return;
             }
-            if (questionController.CurrentIndex == GameRules.replacerNumber - 1)
+            if (questionController.CurrentIndex == questionController.GameRules.ReplacerNumber - 1)
             {
                 questionController.SaveCurrentQuestion(new Question(ReplacerQuestionGroupBox.Controls.OfType<TextBox>().Select(x => x.Text).ToArray()));
                 MessageBox.Show("Сохранено!");

@@ -32,26 +32,18 @@ namespace Millionaire
 
         private void ConstructButton_Click(object sender, EventArgs e)
         {
-            ConstructForm constructForm = new ConstructForm();
+            ConstructForm constructForm = new ConstructForm(new XmlDataProvider(), new DefaultGameRules());
             constructForm.ShowDialog();
         }
 
         private void RecordsButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
         }
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            GameForm gameForm = new GameForm();
+            GameForm gameForm = new GameForm(new XmlDataProvider(), new DefaultGameRules());
             gameForm.ShowDialog();
-        }
-
-        private void MenuForm_Load(object sender, EventArgs e)
-        {
-            IDataProvider dataProvider = new XmlDataProvider();
-            QuestionController.DataProvider = dataProvider;
-            QuestionController.RefreshPackNameList();
         }
     }
 }

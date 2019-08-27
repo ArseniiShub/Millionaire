@@ -3,28 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Millionaire
 {
     class QuestionController
     {
-        QuestionPack questionPack = new QuestionPack();
-        //List<IHint>
-        //IGameRules gameRules { get; set; }
-        public static IDataProvider DataProvider;
-        public static List<string> packNameList = new List<string>();
-        public QuestionType CurrentQuestionState { get; set; } = QuestionType.Default;
+        public QuestionController(IDataProvider dataProvider, IGameRules gameRules)
+        {
+            GameRules = gameRules;
+            DataProvider = dataProvider;
+            timer.Tick += new EventHandler(Timer_Tick);
+            TimeLeftToAnswer = GameRules.TimeToAnswer;
+            questionPack = new QuestionPack(gameRules);
+        }
+        #region Timer
+        public Timer timer = new Timer() { Interval = 1000 };
+        public int TimeLeftToAnswer { get; set; }
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            TimeLeftToAnswer--;
 
+            if (TimeLeftToAnswer == 0)
+            {
+                throw new NotImplementedException();
+                timer.Stop();
+                //GameOver
+            } 
+        }
+        #endregion
+        //List<IHint>
+        public IGameRules GameRules { get; set; }
+        public IDataProvider DataProvider;
+        public List<string> packNameList = new List<string>();
+        public QuestionType CurrentQuestionState { get; set; } = QuestionType.Default;
         public int CurrentIndex { get; set; }
 
+        private QuestionPack questionPack;
         public string CurrentProgress
         {
             get
             {
                 switch (CurrentQuestionState)
                 {
-                    case QuestionType.Default: return $"{CurrentIndex + 1} / {GameRules.questionNumber}";
-                    case QuestionType.ReplacerQuestion: return $"{CurrentIndex + 1} / {GameRules.replacerNumber}";
+                    case QuestionType.Default: return $"{CurrentIndex + 1} / {GameRules.QuestionNumber}";
+                    case QuestionType.ReplacerQuestion: return $"{CurrentIndex + 1} / {GameRules.ReplacerNumber}";
                     default: throw new NotImplementedException("Unknown Question Type");
                 }
             }
@@ -32,7 +55,7 @@ namespace Millionaire
 
         public void SetQuestionController(int currentQuestionIndex, QuestionType questionType)
         {
-            CurrentIndex = currentQuestionIndex;
+            SetQuestionController(currentQuestionIndex);
             CurrentQuestionState = questionType;
         }
         public void SetQuestionController(int currentQuestionIndex)
@@ -52,7 +75,7 @@ namespace Millionaire
 
         public void SavePackName(string name)
         {
-            questionPack.packName = name;
+            questionPack.PackName = name;
         }
 
         public Question GetCurrentQuestion()
@@ -84,14 +107,14 @@ namespace Millionaire
 
         public string GetPackName()
         {
-            return questionPack.packName;
+            return questionPack.PackName;
         }
 
         public void SaveFile()
         {
-            questionPack.isCompleted = true;
+            questionPack.IsCompleted = true;
             DataProvider.SaveQuestionPack(questionPack, packNameList);
-            packNameList.Add(questionPack.packName);
+            packNameList.Add(questionPack.PackName);
         }
 
         public void DeleteFile(string fileName)
@@ -105,12 +128,12 @@ namespace Millionaire
             questionPack = DataProvider.GetQuestionPack(packName);
         }
 
-        public static void RefreshPackNameList()
+        public void RefreshPackNameList()
         {
             packNameList.Clear();
             foreach (var item in DataProvider.GetQuestionPacksList())
             {
-                packNameList.Add(item.packName);
+                packNameList.Add(item.PackName);
             }
         }
     }

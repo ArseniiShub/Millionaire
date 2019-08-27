@@ -15,25 +15,27 @@ namespace Millionaire
 {
     public partial class GameForm : Form
     {
-        QuestionController questionController = new QuestionController();
-        public GameForm()
+        QuestionController questionController;
+        public GameForm(IDataProvider dataProvider, IGameRules gameRules)
         {
+            questionController = new QuestionController(dataProvider, gameRules);
+            questionController.RefreshPackNameList();
             InitializeComponent();
             CreateRadio();
-            timer.Interval = 1000;
+            questionController.timer.Tick += new EventHandler(Timer_Tick);
         }
 
         private void CreateRadio()
         {
             int YPosition = 1;
-            foreach (var item in QuestionController.packNameList)
+            foreach (var item in questionController.packNameList)
             {
                 RadioButton radioButton = new RadioButton { Text = $"{item}", Location = new Point(10, YPosition++ * 20)};
                 choosePackGroupBox.Controls.Add(radioButton);
             }
         }
 
-        private void startGameButton_Click(object sender, EventArgs e)
+        private void StartGameButton_Click(object sender, EventArgs e)
         {
             var selectedButton = choosePackGroupBox.Controls.OfType<RadioButton>().Where(x => x.Checked).FirstOrDefault();
             questionController.LoadQuestionPack(selectedButton.Text);
@@ -47,15 +49,16 @@ namespace Millionaire
 
         private void NewQuestion()
         {
-            if (questionController.CurrentIndex == GameRules.questionNumber)
+            if (questionController.CurrentIndex == questionController.GameRules.QuestionNumber)
                 Victory();
 
             AnswersVisibility(true);
             UpdateCounter(counterLabel, 1);
             FillQuestionData(answersPanel);
             Shuffle();
-            timerLabel.Text = GameRules.timeToAnswer.ToString();
-            timer.Start();
+            timerLabel.Text = questionController.GameRules.TimeToAnswer.ToString();
+            questionController.TimeLeftToAnswer = questionController.GameRules.TimeToAnswer;
+            questionController.timer.Start();
             prizeLabel.Text = $"Текущий выигрыш: {Prize.GetCurrentPrize(questionController.CurrentIndex)} рублей";
         }
 
@@ -86,9 +89,10 @@ namespace Millionaire
             }
         }
 
-        async private void answerButtonClick(object sender, EventArgs e)
+        async private void AnswerButtonClick(object sender, EventArgs e)
         {
             answersPanel.Enabled = false;
+            questionController.timer.Stop();
             if (questionController.IsRightAnswer(((Button)sender).Text))
             {
                 ((Button)sender).BackColor = Color.ForestGreen;
@@ -119,7 +123,7 @@ namespace Millionaire
             }
         }
 
-        private void helpButton_Click(object sender, EventArgs e)
+        private void HelpButton_Click(object sender, EventArgs e)
         {
             HelpForm helpForm = new HelpForm();
             helpForm.ShowDialog();
@@ -135,27 +139,21 @@ namespace Millionaire
             throw new NotImplementedException();
         }
 
-        private void hint4_Click(object sender, EventArgs e)
+        private void Hint4_Click(object sender, EventArgs e)
         {
         }
 
-        private void hint2_Click(object sender, EventArgs e)
+        private void Hint2_Click(object sender, EventArgs e)
         {
         }
 
-        private void hint1_Click(object sender, EventArgs e)
+        private void Hint1_Click(object sender, EventArgs e)
         {
         }
 
-        private void Timer_Tick(object sender, EventArgs e) //QC timer -> обработчик -> здесь
+        private void Timer_Tick(object sender, EventArgs e)
         {
-            timerLabel.Text = (Convert.ToInt32(timerLabel.Text) - 1).ToString();
-            if (Convert.ToInt32(timerLabel.Text) == 0)
-            {
-                timer.Stop();
-                MessageBox.Show("Время вышло!"); //IInteractiveService
-                GameOver();
-            }
+            timerLabel.Text = questionController.TimeLeftToAnswer.ToString();
         }
     }
 }

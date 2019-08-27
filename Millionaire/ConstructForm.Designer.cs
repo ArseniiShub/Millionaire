@@ -406,7 +406,6 @@ namespace Millionaire
             this.Controls.Add(this.QuestionsGroupBox);
             this.Controls.Add(this.ReplacerQuestionGroupBox);
             this.Name = "ConstructForm";
-            this.Load += new System.EventHandler(this.ConstructForm_Load);
             this.InitialGroupBox.ResumeLayout(false);
             this.PackNameGroupBox.ResumeLayout(false);
             this.PackNameGroupBox.PerformLayout();
