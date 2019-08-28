@@ -30,7 +30,6 @@ namespace Millionaire
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.playerNameLabel = new System.Windows.Forms.Label();
             this.playerNameBox = new System.Windows.Forms.TextBox();
             this.startGameButton = new System.Windows.Forms.Button();
@@ -44,14 +43,13 @@ namespace Millionaire
             this.answerButton3 = new System.Windows.Forms.Button();
             this.answerButton4 = new System.Windows.Forms.Button();
             this.helpButton = new System.Windows.Forms.Button();
-            this.hint4 = new System.Windows.Forms.Button();
+            this.addTimeHint = new System.Windows.Forms.Button();
             this.hint3 = new System.Windows.Forms.Button();
             this.hint2 = new System.Windows.Forms.Button();
             this.hint1 = new System.Windows.Forms.Button();
             this.timerLabel = new System.Windows.Forms.Label();
             this.prizeLabel = new System.Windows.Forms.Label();
             this.counterLabel = new System.Windows.Forms.Label();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.initialPanel.SuspendLayout();
             this.gamePanel.SuspendLayout();
             this.answersPanel.SuspendLayout();
@@ -82,7 +80,7 @@ namespace Millionaire
             this.startGameButton.TabIndex = 4;
             this.startGameButton.Text = "Начать игру";
             this.startGameButton.UseVisualStyleBackColor = true;
-            this.startGameButton.Click += new System.EventHandler(this.startGameButton_Click);
+            this.startGameButton.Click += new System.EventHandler(this.StartGameButton_Click);
             // 
             // initialPanel
             // 
@@ -97,9 +95,9 @@ namespace Millionaire
             // 
             // choosePackGroupBox
             // 
-            this.choosePackGroupBox.Location = new System.Drawing.Point(570, 43);
+            this.choosePackGroupBox.Location = new System.Drawing.Point(500, 40);
             this.choosePackGroupBox.Name = "choosePackGroupBox";
-            this.choosePackGroupBox.Size = new System.Drawing.Size(205, 331);
+            this.choosePackGroupBox.Size = new System.Drawing.Size(250, 350);
             this.choosePackGroupBox.TabIndex = 5;
             this.choosePackGroupBox.TabStop = false;
             this.choosePackGroupBox.Text = "Выберете набор вопросов";
@@ -109,7 +107,7 @@ namespace Millionaire
             this.gamePanel.BackgroundImage = global::Millionaire.Properties.Resources.Game;
             this.gamePanel.Controls.Add(this.answersPanel);
             this.gamePanel.Controls.Add(this.helpButton);
-            this.gamePanel.Controls.Add(this.hint4);
+            this.gamePanel.Controls.Add(this.addTimeHint);
             this.gamePanel.Controls.Add(this.hint3);
             this.gamePanel.Controls.Add(this.hint2);
             this.gamePanel.Controls.Add(this.hint1);
@@ -153,7 +151,7 @@ namespace Millionaire
             this.answerButton1.Size = new System.Drawing.Size(250, 25);
             this.answerButton1.TabIndex = 0;
             this.answerButton1.UseVisualStyleBackColor = false;
-            this.answerButton1.Click += new System.EventHandler(this.answerButtonClick);
+            this.answerButton1.Click += new System.EventHandler(this.AnswerButtonClick);
             // 
             // answerButton2
             // 
@@ -162,7 +160,7 @@ namespace Millionaire
             this.answerButton2.Size = new System.Drawing.Size(250, 25);
             this.answerButton2.TabIndex = 0;
             this.answerButton2.UseVisualStyleBackColor = true;
-            this.answerButton2.Click += new System.EventHandler(this.answerButtonClick);
+            this.answerButton2.Click += new System.EventHandler(this.AnswerButtonClick);
             // 
             // answerButton3
             // 
@@ -171,7 +169,7 @@ namespace Millionaire
             this.answerButton3.Size = new System.Drawing.Size(250, 25);
             this.answerButton3.TabIndex = 0;
             this.answerButton3.UseVisualStyleBackColor = true;
-            this.answerButton3.Click += new System.EventHandler(this.answerButtonClick);
+            this.answerButton3.Click += new System.EventHandler(this.AnswerButtonClick);
             // 
             // answerButton4
             // 
@@ -180,7 +178,7 @@ namespace Millionaire
             this.answerButton4.Size = new System.Drawing.Size(250, 25);
             this.answerButton4.TabIndex = 0;
             this.answerButton4.UseVisualStyleBackColor = true;
-            this.answerButton4.Click += new System.EventHandler(this.answerButtonClick);
+            this.answerButton4.Click += new System.EventHandler(this.AnswerButtonClick);
             // 
             // helpButton
             // 
@@ -190,18 +188,18 @@ namespace Millionaire
             this.helpButton.TabIndex = 5;
             this.helpButton.Text = "?";
             this.helpButton.UseVisualStyleBackColor = true;
-            this.helpButton.Click += new System.EventHandler(this.helpButton_Click);
+            this.helpButton.Click += new System.EventHandler(this.HelpButton_Click);
             // 
-            // hint4
+            // addTimeHint
             // 
-            this.hint4.BackgroundImage = global::Millionaire.Properties.Resources.AddTime;
-            this.hint4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.hint4.Location = new System.Drawing.Point(770, 580);
-            this.hint4.Name = "hint4";
-            this.hint4.Size = new System.Drawing.Size(60, 60);
-            this.hint4.TabIndex = 4;
-            this.hint4.UseVisualStyleBackColor = true;
-            this.hint4.Click += new System.EventHandler(this.hint4_Click);
+            this.addTimeHint.BackgroundImage = global::Millionaire.Properties.Resources.AddTime;
+            this.addTimeHint.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.addTimeHint.Location = new System.Drawing.Point(770, 580);
+            this.addTimeHint.Name = "hint4";
+            this.addTimeHint.Size = new System.Drawing.Size(60, 60);
+            this.addTimeHint.TabIndex = 4;
+            this.addTimeHint.UseVisualStyleBackColor = true;
+            this.addTimeHint.Click += new System.EventHandler(this.AddTimeHint_Click);
             // 
             // hint3
             // 
@@ -222,7 +220,7 @@ namespace Millionaire
             this.hint2.Size = new System.Drawing.Size(60, 60);
             this.hint2.TabIndex = 4;
             this.hint2.UseVisualStyleBackColor = true;
-            this.hint2.Click += new System.EventHandler(this.hint2_Click);
+            this.hint2.Click += new System.EventHandler(this.Hint2_Click);
             // 
             // hint1
             // 
@@ -233,7 +231,7 @@ namespace Millionaire
             this.hint1.Size = new System.Drawing.Size(60, 60);
             this.hint1.TabIndex = 4;
             this.hint1.UseVisualStyleBackColor = true;
-            this.hint1.Click += new System.EventHandler(this.hint1_Click);
+            this.hint1.Click += new System.EventHandler(this.Hint1_Click);
             // 
             // timerLabel
             // 
@@ -259,10 +257,6 @@ namespace Millionaire
             this.counterLabel.Size = new System.Drawing.Size(35, 13);
             this.counterLabel.TabIndex = 0;
             this.counterLabel.Text = "label1";
-            // 
-            // timer
-            // 
-            this.timer.Tick += new System.EventHandler(this.Timer_Tick);
             // 
             // GameForm
             // 
@@ -290,7 +284,7 @@ namespace Millionaire
         private System.Windows.Forms.Panel initialPanel;
         private System.Windows.Forms.GroupBox choosePackGroupBox;
         private System.Windows.Forms.Panel gamePanel;
-        private System.Windows.Forms.Button hint4;
+        private System.Windows.Forms.Button addTimeHint;
         private System.Windows.Forms.Button hint3;
         private System.Windows.Forms.Button hint2;
         private System.Windows.Forms.Button hint1;
@@ -304,6 +298,5 @@ namespace Millionaire
         private System.Windows.Forms.Button answerButton3;
         private System.Windows.Forms.Label timerLabel;
         private System.Windows.Forms.Label questionLabel;
-        private System.Windows.Forms.Timer timer;
     }
 }

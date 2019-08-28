@@ -102,7 +102,6 @@
             this.MinimizeBox = false;
             this.Name = "MenuForm";
             this.Text = "Who wants to be a Millionaire?";
-            this.Load += new System.EventHandler(this.MenuForm_Load);
             this.ResumeLayout(false);
 
         }

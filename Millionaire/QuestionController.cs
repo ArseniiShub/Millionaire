@@ -32,7 +32,6 @@ namespace Millionaire
             } 
         }
         #endregion
-        //List<IHint>
         public IGameRules GameRules { get; set; }
         public IDataProvider DataProvider;
         public List<string> packNameList = new List<string>();

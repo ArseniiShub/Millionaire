@@ -47,20 +47,20 @@ namespace Millionaire
         {
             DirectoryInfo dir = new DirectoryInfo(questionsPath);
             string fileName;
-            if (CheckIfNameAvaliable(questionPack.packName, namelist))
-                fileName = $"{questionPack.packName}";
+            if (CheckIfNameAvaliable(questionPack.PackName, namelist))
+                fileName = $"{questionPack.PackName}";
             else
-                fileName = questionPack.packName + " (1)";
+                fileName = questionPack.PackName + " (1)";
             if (!CheckIfNameAvaliable(fileName, namelist))
             {
                 int conflictAddition = Convert.ToInt32(String.Concat(fileName.SkipWhile(x => x != '(').Skip(1).TakeWhile(y => y != ')')));
-                while (!CheckIfNameAvaliable($"{questionPack.packName} ({conflictAddition})", namelist))
+                while (!CheckIfNameAvaliable($"{questionPack.PackName} ({conflictAddition})", namelist))
                 {
                     conflictAddition++;
                 }
-                fileName = $"{questionPack.packName} ({conflictAddition})";
+                fileName = $"{questionPack.PackName} ({conflictAddition})";
             }
-            questionPack.packName = fileName;
+            questionPack.PackName = fileName;
             
             XmlSerializer formatter = new XmlSerializer(typeof(QuestionPack));
             using (FileStream fs = new FileStream($"{questionsPath}\\{fileName}.xml", FileMode.OpenOrCreate))
