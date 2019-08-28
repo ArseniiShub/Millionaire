@@ -59,7 +59,7 @@ namespace Millionaire
             timerLabel.Text = questionController.GameRules.TimeToAnswer.ToString();
             questionController.TimeLeftToAnswer = questionController.GameRules.TimeToAnswer;
             questionController.timer.Start();
-            prizeLabel.Text = $"Текущий выигрыш: {Prize.GetCurrentPrize(questionController.CurrentIndex)} рублей";
+            prizeLabel.Text = $"Текущий выигрыш: {questionController.GameRules.GetCurrentPrize(questionController.CurrentIndex)} рублей";
         }
 
         private void FillQuestionData(Panel panel)
@@ -139,7 +139,7 @@ namespace Millionaire
             throw new NotImplementedException();
         }
 
-        private void Hint4_Click(object sender, EventArgs e)
+        private void AddTimeHint_Click(object sender, EventArgs e)
         {
         }
 
