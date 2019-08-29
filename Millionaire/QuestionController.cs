@@ -57,11 +57,15 @@ namespace Millionaire
         public void SetQuestionController(int currentQuestionIndex, QuestionType questionType)
         {
             SetQuestionController(currentQuestionIndex);
-            CurrentQuestionState = questionType;
+            SetQuestionController(questionType);
         }
         public void SetQuestionController(int currentQuestionIndex)
         {
             CurrentIndex = currentQuestionIndex;
+        }
+        public void SetQuestionController(QuestionType questionType)
+        {
+            CurrentQuestionState = questionType;
         }
 
         public bool IsRightAnswer(string answer)
@@ -69,9 +73,13 @@ namespace Millionaire
             switch (CurrentQuestionState)
             {
                 case QuestionType.Default: return answer == questionPack.questions[CurrentIndex].RightAnswer;
-                case QuestionType.ReplacerQuestion: return answer == questionPack.replacerQuestions[CurrentIndex].RightAnswer;
+                case QuestionType.ReplacerQuestion:
+                    {
+                        bool isRightAnswer = questionPack.replacerQuestions[GameRules.GetReplacerQuestionIndex(CurrentIndex)].RightAnswer == answer;
+                        return isRightAnswer;
+                    }
                 default: throw new NotImplementedException("Unknown Question Type");
-            }
+            }   
         }
 
         public void SavePackName(string name)
@@ -89,6 +97,11 @@ namespace Millionaire
                     return questionPack.replacerQuestions[CurrentIndex];
                 default: throw new Exception("Unknown Question Type");
             }
+        }
+
+        public Question GetCurrentReplacerQuestion()
+        {
+            return questionPack.replacerQuestions[CurrentIndex / 5];
         }
 
         public void SaveCurrentQuestion(Question question)

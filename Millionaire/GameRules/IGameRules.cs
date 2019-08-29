@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Millionaire.GameRules
+﻿namespace Millionaire.GameRules
 {
     public interface IGameRules
     {
@@ -12,7 +6,9 @@ namespace Millionaire.GameRules
         int ReplacerNumber { get; }
         int TimeToAnswer { get; }
         int AdditionalTimeToAnswer { get; }
+        bool HintsAvailable { get; }
         int GetCurrentPrize(int currentQuestionNum);
         int GetFinalPrize(int currentQuestionNum);
+        int GetReplacerQuestionIndex(int currentQuesitonIndex);
     }
 }
