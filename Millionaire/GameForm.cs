@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
-using System.Xml.Serialization;
-using System.Threading;
 using Millionaire.DataService;
 using Millionaire.GameRules;
 
@@ -18,6 +12,8 @@ namespace Millionaire
     public partial class GameForm : Form
     {
         QuestionController questionController;
+        bool IsExtraLifeAvailable = false; //??????????
+        Random rand = new Random(); //???
         public GameForm(IDataProvider dataProvider, IGameRules gameRules)
         {
             questionController = new QuestionController(dataProvider, gameRules);
@@ -25,6 +21,14 @@ namespace Millionaire
             InitializeComponent();
             CreateRadio();
             questionController.timer.Tick += new EventHandler(Timer_Tick);
+            if (!gameRules.HintsAvailable)
+            {
+                foreach (Button item in hintsPanel.Controls)
+                {
+                    item.Enabled = false;
+                    item.BackgroundImage = ToolStripRenderer.CreateDisabledImage(item.BackgroundImage);
+                }
+            }
         }
 
         private void CreateRadio()
@@ -39,10 +43,11 @@ namespace Millionaire
 
         private void StartGameButton_Click(object sender, EventArgs e)
         {
+            //if (string.IsNullOrWhiteSpace(playerNameBox.Text))
+            //    return;
+
             var selectedButton = choosePackGroupBox.Controls.OfType<RadioButton>().Where(x => x.Checked).FirstOrDefault();
             questionController.LoadQuestionPack(selectedButton.Text);
-            if (string.IsNullOrWhiteSpace(playerNameBox.Text))
-                return;
             initialPanel.Visible = false;
             gamePanel.Visible = true;
             questionController.SetQuestionController(-1, QuestionType.Default);
@@ -67,7 +72,7 @@ namespace Millionaire
 
         private void FillQuestionData(Panel panel, Question question)
         {
-            if (questionController.GetCurrentQuestion() != null)
+            if (question != null)
             {
                 var questionAsList = question.GetQuestionData().ToList();
                 panel.Controls[0].Text = questionAsList[0];
@@ -96,10 +101,10 @@ namespace Millionaire
 
         async private void AnswerButtonClick(object sender, EventArgs e)
         {
-            answersPanel.Enabled = false;
-            questionController.timer.Stop();
             if (questionController.IsRightAnswer(((Button)sender).Text))
             {
+                answersPanel.Enabled = false;
+                questionController.timer.Stop();
                 ((Button)sender).BackColor = Color.ForestGreen;
                 await Task.Delay(3000);
                 ((Button)sender).BackColor = Color.LightGray;
@@ -108,10 +113,24 @@ namespace Millionaire
             }
             else
             {
-                ((Button)sender).BackColor = Color.Red;
-                answersPanel.Controls.OfType<Button>().Where(x => questionController.IsRightAnswer(x.Text)).FirstOrDefault().BackColor = Color.ForestGreen;
-                await Task.Delay(3000);
-                GameOver();
+                if (IsExtraLifeAvailable)
+                {
+                    ((Button)sender).BackColor = Color.Tomato;
+                    ((Button)sender).Enabled = false;
+                    extraLifeHint.FlatStyle = FlatStyle.Standard;
+                    extraLifeHint.Enabled = false;
+                    extraLifeHint.BackgroundImage = ToolStripRenderer.CreateDisabledImage(extraLifeHint.BackgroundImage);
+                }
+                else
+                {
+                    answersPanel.Enabled = false;
+                    questionController.timer.Stop();
+                    ((Button)sender).BackColor = Color.Red;
+                    answersPanel.Controls.OfType<Button>().Where(x => questionController.IsRightAnswer(x.Text)).FirstOrDefault().BackColor = Color.ForestGreen;
+                    await Task.Delay(3000);
+                    GameOver();
+                }
+                IsExtraLifeAvailable = false;
             }     
         }
 
@@ -150,19 +169,45 @@ namespace Millionaire
 
         private void AddTimeHint_Click(object sender, EventArgs e)
         {
+            addTimeHint.Enabled = false;
+            addTimeHint.BackgroundImage = ToolStripRenderer.CreateDisabledImage(addTimeHint.BackgroundImage);
+            questionController.AddTime();
         }
-
-        private void Hint2_Click(object sender, EventArgs e)
+        private void ExtraLifeHint_Click(object sender, EventArgs e)
         {
+            extraLifeHint.FlatStyle = FlatStyle.Flat;
+            extraLifeHint.FlatAppearance.BorderColor = Color.Red;
+            IsExtraLifeAvailable = true;
         }
-
-        private void Hint1_Click(object sender, EventArgs e)
+        private void FiftyFiftyHint_Click(object sender, EventArgs e)
         {
-        }
+            fiftyFiftyHint.Enabled = false;
+            fiftyFiftyHint.BackgroundImage = ToolStripRenderer.CreateDisabledImage(fiftyFiftyHint.BackgroundImage);
 
+            var answers = answersPanel.Controls.OfType<Button>().ToList();
+            for (int i = rand.Next(-1, 1) * 3, hiddenQuestionsNumber = 0; hiddenQuestionsNumber < 2; i++)
+            {
+                if (!questionController.IsRightAnswer(answers[Math.Abs(i)].Text))
+                {
+                    answers[Math.Abs(i)].Visible = false;
+                    hiddenQuestionsNumber++;
+                }
+            }
+        }
+        private void ChangeQuestionHint_Click(object sender, EventArgs e)
+        {
+            ResetAnswersState();
+            changeQuestionHint.Enabled = false;
+            FillQuestionData(answersPanel, questionController.GetCurrentReplacerQuestion());
+            ShuffleAnswers();
+            changeQuestionHint.BackgroundImage = ToolStripRenderer.CreateDisabledImage(changeQuestionHint.BackgroundImage);
+            questionController.SetQuestionController(QuestionType.ReplacerQuestion);
+        }
         private void Timer_Tick(object sender, EventArgs e)
         {
             timerLabel.Text = questionController.TimeLeftToAnswer.ToString();
         }
+
+
     }
 }

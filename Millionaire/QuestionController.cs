@@ -2,9 +2,6 @@
 using Millionaire.GameRules;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Millionaire
@@ -32,6 +29,10 @@ namespace Millionaire
                 timer.Stop();
                 //GameOver
             } 
+        }
+        public void AddTime()
+        {
+            TimeLeftToAnswer += GameRules.AdditionalTimeToAnswer;
         }
         #endregion
         public IGameRules GameRules { get; set; }

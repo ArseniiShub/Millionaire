@@ -12,7 +12,12 @@ namespace Millionaire.GameRules
         public int ReplacerNumber { get; } = 3;
         public int TimeToAnswer { get; } = 60;
         public int AdditionalTimeToAnswer { get; } = 120;
+        public bool HintsAvailable { get; } = true;
 
+        public int GetReplacerQuestionIndex(int currentQuesitonIndex)
+        {
+            return currentQuesitonIndex / 5;
+        }
         public int GetCurrentPrize(int currentQuestionNum)
         {
             switch (currentQuestionNum)
@@ -24,7 +29,6 @@ namespace Millionaire.GameRules
                 default: return GetCurrentPrize(currentQuestionNum - 1) * 2;
             }
         }
-
         public int GetFinalPrize(int currentQuestionNum)
         {
             if (currentQuestionNum == 15)
