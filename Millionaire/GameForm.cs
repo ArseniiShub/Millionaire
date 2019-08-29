@@ -54,25 +54,26 @@ namespace Millionaire
             if (questionController.CurrentIndex == questionController.GameRules.QuestionNumber)
                 Victory();
 
-            AnswersVisibility(true);
+            questionController.CurrentQuestionState = QuestionType.Default;
+            ResetAnswersState();
             UpdateCounter(counterLabel, 1);
-            FillQuestionData(answersPanel);
-            Shuffle();
+            FillQuestionData(answersPanel, questionController.GetCurrentQuestion());
+            ShuffleAnswers();
             timerLabel.Text = questionController.GameRules.TimeToAnswer.ToString();
             questionController.TimeLeftToAnswer = questionController.GameRules.TimeToAnswer;
             questionController.timer.Start();
             prizeLabel.Text = $"Текущий выигрыш: {questionController.GameRules.GetCurrentPrize(questionController.CurrentIndex)} рублей";
         }
 
-        private void FillQuestionData(Panel panel)
+        private void FillQuestionData(Panel panel, Question question)
         {
             if (questionController.GetCurrentQuestion() != null)
             {
-                var question = questionController.GetCurrentQuestion().GetQuestionData().ToList();
-                panel.Controls[0].Text = question[0];
+                var questionAsList = question.GetQuestionData().ToList();
+                panel.Controls[0].Text = questionAsList[0];
                 for (int i = 1; i < panel.Controls.Count; i++)
                 {
-                    panel.Controls[i].Text = question[i];
+                    panel.Controls[i].Text = questionAsList[i];
                 }
             }
         }
@@ -83,11 +84,13 @@ namespace Millionaire
             counter.Text = questionController.CurrentProgress;
         }
 
-        private void AnswersVisibility(bool b)
+        private void ResetAnswersState()
         {
             foreach (var item in answersPanel.Controls.OfType<Button>())
             {
-                item.Visible = b;
+                item.Visible = true;
+                item.Enabled = true;
+                item.BackColor = SystemColors.Control;
             }
         }
 
@@ -112,16 +115,20 @@ namespace Millionaire
             }     
         }
 
-        private void Shuffle()
+        private void ShuffleAnswers()
         {
-            Random rand = new Random();
-            for (int i = answersPanel.Controls.Count - 1; i >= 1; i--)
+            int answersCount = answersPanel.Controls.OfType<Button>().Count();
+            for (int i = 0; i < answersCount; i++)
             {
-                int j = rand.Next(1, i);
+                int j;
+                do
+                {
+                    j = rand.Next(0, answersCount);
+                } while (j == i);
 
-                string tmp = answersPanel.Controls[j].Text;
-                answersPanel.Controls[j].Text = answersPanel.Controls[i].Text;
-                answersPanel.Controls[i].Text = tmp;
+                string temp = answersPanel.Controls.OfType<Button>().ToList()[j].Text;
+                answersPanel.Controls.OfType<Button>().ToList()[j].Text = answersPanel.Controls.OfType<Button>().ToList()[i].Text;
+                answersPanel.Controls.OfType<Button>().ToList()[i].Text = temp;
             }
         }
 
