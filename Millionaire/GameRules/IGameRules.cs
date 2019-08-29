@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Millionaire
+namespace Millionaire.GameRules
 {
     public interface IGameRules
     {

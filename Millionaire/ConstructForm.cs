@@ -1,13 +1,15 @@
 ﻿using System;
-using System.IO;
 using System.Windows.Forms;
 using System.Linq;
+using Millionaire.DataService;
+using Millionaire.GameRules;
 
 namespace Millionaire
 {
     public partial class ConstructForm : Form //Visual
     {
         QuestionController questionController;
+
         public ConstructForm(IDataProvider dataProvider, IGameRules gameRules)
         {
             questionController = new QuestionController(dataProvider, gameRules);
